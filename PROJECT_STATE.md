@@ -23,3 +23,28 @@ Hedefler (henüz uygulanmadı):
 - Görsel kimlik tasarımı ayrı iterasyonda değerlendirilsin; ilk denemeden önce geri dönüş checkpoint'i korunsun.
 
 Durum: **yalnız hedef kaydı; kod, UX akışı ve yayın değiştirilmedi**.
+
+## Planlanan — 500+ bölüm, ilerleme sürekliliği ve benzersiz çiftler (2026-10-09)
+
+Kullanıcının gözlemi: yüksek bölümlerde **aynı emoji bir bölümde birden fazla çift olarak** çıkabiliyor; tekrar hissi var. Temel kesin kural: **bir sembol bir bölümde yalnızca bir çifte karşılık gelir (tam iki kart)**. Kasıtlı benzer görünümlü farklı semboller ayrıca görsel ayırt edilebilirlik kontrolünden geçmeli.
+
+### Öncelik 1: Doğruluk (kısa teknik düzeltme)
+- Normal ve günlük destede seçmeden önce emoji havuzlarını tekilleştir; aynı emojiyi iki kez seçme.
+- Eşleşme garantisi: 2*N kart, N benzersiz sembol, her sembolden tam 2 kart; yeterli sembol yoksa sessizce kırık deste üretme, yapılandırma testinde açık hata ver.
+- Mevcut 100 bölümde bütün dünya/ızgara kapasitelerini otomatik denetle; gündelik deterministik seed sözleşmesi bozulmasın.
+- Mevcut kayıtlar/yıldızlar bozulmasın.
+
+### İlk 500 bölüm tasarım ilkeleri — henüz uygulanmadı
+- 100→101 gibi kilometre taşlarında **yeniden 2 çiftle başlamama**: kazanılmış ustalık devam etmeli.
+- Zorluk tek boyutlu kart sayısı artışı olmamalı; mobil dikey ekranda okunabilir maksimum yoğunluk korunmalı.
+- Konfigürasyon temelli veri odaklı seviye üretici: `levelId`, `world`, `layout`, `challengeRules`, `rewardGoals`, `visualStyle`, `seed`, `difficultyBand` gibi sürümlenmiş alanlar; rastgeleliği kontrollü/deterministik tut.
+- Yeni mekanikleri kontrollü tanıt; ardından farklı kombinasyonlarla ve küçük dinlenme duraklarıyla tekrar kullan. Sadece kozmetik farklılık yeni bölüm sayılmasın.
+- Mekanik adayları: kısa ön izleme; hamle hedefleri; süreli özel görev; çiftleri stratejik bulma; kısıtlı ipucu; karma ve birleştirilmiş hedefler. Bazı varyasyonlar erişilebilirlik ve adillik testleriyle onaylanmalı.
+- Her yeni dilimde ilerleme/zorluk monoton **aynı kart sayısı** anlamına gelmez; ustalık eğilimi artarken bilinçli tempo çeşitliliği olabilir.
+- Çeşitlilik ölçümü: ardışık seviyelerde aynı `layout + challengeRules + objective` dizisinin uzun bloklar hâlinde yinelenmesini önleyen otomatik kontroller ve oynanış testleri.
+- 100 veya 500 “nihai bitiş” olarak sabitlenmemeli: yeni dünya ve bölüm paketleri eklenebilir. Önce 500'lük katalog üretmek yerine üretici + doğrulayıcı altyapıyı kurup küçük grupta oyuncu kabul testi yap.
+- Kullanıcı kaydı seviye kimliklerinden bağımsız olmayan geçiş/migrasyon planına sahip olsun; eskiden kazanılmış bölüm ilerlemesi korunmalı.
+- 10 dünya sadece emoji değil, atmosfer ve sonraki aşamada mekanik kombinasyonu ile ayırt edilmeli.
+- Sahte içerik hacmi yerine gerçekten ayırt edilebilir, eğlenceli 100+ bölüm hedefi; kapsamı test sonucuna göre artır.
+- Açılış/ana menü tasarım hedefleri yukarıda; bu işten ayrı iterasyon.
+Durum: **tasarım hedefleri kayıtlı; bu commit oyun kodunu değiştirmez**.

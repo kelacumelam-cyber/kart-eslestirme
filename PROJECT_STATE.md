@@ -148,3 +148,12 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Commit'ler: çekirdek `16efb2f`, settle koruması `da7bd8d`, test son düzeltmesi `27cadd0`.
 - **Sınır:** Bu yalnızca yeniden kullanılabilir saf durum modülü; 23 bölümlük oynanabilir pilotun animasyon UI bağlantısı henüz buna geçirilmedi. Gerçek tarayıcı/cihaz testi yapılmadı.
 - Sonraki adım: sahne adaptörü bağlarken callback nesillerini sınamak, ardından gerçek cihazda kabul testi.
+
+## Durum motoru–görsel arayüz bağlantısı — ayrı deney (2026-10-09)
+
+- `experiments/level-flow-session-v1.html` oluşturuldu, commit: `2ff46067f32fcf54ee7e624b75d235be2907550b`.
+- Mevcut `src/level-core.js` oturum motoru, yeni sayfada kart dokunuşları ve animasyon sonuçları için **tek oyun durumu otoritesi** olarak kullanılıyor. Arayüz, kabul edilmiş 3D kart açma ve eşleşince silikleşme davranışını kullanıyor.
+- Bölüm geçişlerinde sahne nesli artıyor, eski zamanlayıcılar temizleniyor. UI eşleşmeyi kendi hesaplamıyor; settle sonucu motordan geliyor.
+- Aynı modülden 23 bölümün tamamı sahte DOM'da oluşturulup kart adedi kontrol edildi: 23/23 geçti; 1. bölüm 4 kart.
+- **Gerçek tarayıcı, dokunmatik ve özel mekaniklerin uçtan uca animasyon testi henüz yapılmadı.** Özellikle buz çözülmesi, dalgaların görünürlüğü ve ön izleme cihazda kabul bekliyor. Üretim/ana oyun ve onaylanan `level-flow-23.html` değiştirilmedi.
+- Sonraki adım: izole sayfada gerçek tarayıcı kabulü veya daha ayrıntılı otomatik olay testleri; başarı kanıtından önce ana oyuna geçiş yapma.

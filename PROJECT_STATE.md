@@ -109,3 +109,12 @@ Durum: yalnız hedef kaydı, oyun kodu değiştirilmedi.
 - Kartlar iki ayrı yüzü olan 3D dönüş yapısına dönüştürüldü; doğru/yanlış, buz, dalga animasyonları için CSS kuralları eklendi.
 - Oyuncunun ana oyun kayıtları değişmez. 18 bölümlük önceki pilot ve orijinal oyun korunmuştur.
 - Statik içerik/bağlantı kontrolleri geçti; tarayıcıda ve gerçek Android cihazda animasyon/oynanış testi bekleniyor. Geri bildirim gelmeden ana oyuna aktarma yapılmayacak.
+
+## Güncel kabul ve emoji tekil çift düzeltmesi (2026-10-09)
+
+- Kullanıcı 23 bölümlük pilotun eşleşme silikleşmesi animasyonunu **beğenip onayladı**. Bu görsel davranış referans kabul edildi.
+- Ana oyundaki normal ve günlük deste üretimi ortak `buildUniqueDeck` ile güncellendi: bir emoji bir bölümde yalnızca **tam bir çift** oluşturur; farklı bölümlerde tekrar kullanılabilir.
+- 10 dünya × 21 çift yoğunluğu × 10 üretim = 2.100 deste üretimi sınandı; benzersizlik ve kart adetleri geçti. Günlük aynı seed için deterministik sonuç ve yetersiz havuzun hata vermesi de kontrol edildi.
+- JavaScript sözdizimi kontrolü başarılı. **Gerçek tarayıcı/telefon uçtan uca test yapılmadı; sonucu kesin sürüm kabulü olarak görme.**
+- Ana oyun düzeltme commit'i: `18edf8d6d10a3ec1771680ef139446ebea6f768a`.
+- Bir sonraki küçük adım: beğenilen altı karakteri yapılandırılabilir/ölçeklenebilir kurala çevirmek; orijinal oyun ilerlemesi korunarak aşamalı taşıma. Önce 23 bölümün gerçek cihaz kabulünü doğrula.

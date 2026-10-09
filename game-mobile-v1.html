@@ -377,7 +377,13 @@ function launchFireworks(){
  }
  fireworksFrame=requestAnimationFrame(frame);
 }
-function startClock(){if(started)return;started=Date.now();clock=setInterval(()=>{elapsed=Math.floor((Date.now()-started)/1000);update()},400)}
+function startClock(){if(started)return;started=Date.now();clock=setInterval(tickClock,1000)}
+function tickClock(){if(document.hidden||!started||!session||session.state().phase==="completed")return;elapsed=Math.floor((Date.now()-started)/1000);update()}
+let backgroundAt=0;
+document.addEventListener("visibilitychange",()=>{
+ if(document.hidden){backgroundAt=Date.now();stopFireworks();clearInterval(clock);clock=null}
+ else if(backgroundAt){if(started&&session&&session.state().phase!=="completed"){started+=Date.now()-backgroundAt;clock=setInterval(tickClock,1000);tickClock()}backgroundAt=0}
+});
 function flipFace(tile,on){tile.button.classList.toggle("open",on);tile.button.setAttribute("aria-label",on?tile.emoji:"Kapalı kart")}
 function matchVisual(a,b){for(const t of [a,b]){t.button.classList.remove("hit","bad");t.button.classList.add("matched");flipFace(t,true)}}
 function syncLocks(){

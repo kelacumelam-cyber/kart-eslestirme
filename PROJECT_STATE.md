@@ -215,3 +215,12 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Sahte DOM + zamanlayıcılar üzerinde oyun akışı yürütüldü: yeni kullanıcı 1. bölümde başlar, iki eşleşmeden sonra 2. bölüm açılır ve kayıt yapılır; kayıtlı 7. seviyeye yeniden giriş ve kilitli sonraki bölüm; 100. bölümde 20 kartın tamamlanması, kutlama yazısı ve final kaydı. 3 senaryo geçti.
 - Güncelleme: `645c413a4cb6b2a08809ec53fdca18c2e50a4923`.
 - **Bu testler gerçek telefon/Android testi değildir.** Son final APK için gerçek derleme ve kullanıcının onayı beklenir. Görsel, kart, bölüm mekaniği değişmedi.
+
+## 100 bölüm özel mekanik tam oynanış regresyonu (2026-10-09)
+
+- `tests/level-100-playthrough.test.cjs` eklendi: 100 bölüm × 4 deterministik kart dağılımı = **400 tamamlama senaryosu**, 3.000 doğru eşleşme; klasik, ön izleme, şekilli tahta, hamle hedefi, buz ve dalga çeşitlerinin tamamı.
+- Her senaryoda motorun uygun kart çiftleriyle sona kadar ilerlemesi, bölüm tamamlanması, tam hamle/çift sayısı, tamamlanmadan sonra girdi reddi, restart ve eski jenerasyon callback reddi sınandı.
+- Test JavaScript ortamında çalıştırıldı: **400/400 PASS**. Test komutu `npm.cmd run test:core` içine eklendi.
+- Testler saf motor düzeyindedir; **tam tarayıcı animasyonları, mobil Android ses/yerleşim ve gerçek APK derlemesi henüz tekrar test edilmedi**.
+- Commitler: test `2fe699dc67e0efbf7e31a89c1ab3e7755f5a7f7e`, npm entegrasyonu `903aa36b65783510fc9425352352dd8364b5a11e`.
+- Sonraki adım: hata/fazla hızlı dokunma ve re-render senaryolarıyla sahne regresyonlarını genişletmek, ardından yerel Android APK için kullanıcıdan komut çalıştırmasını isteyerek final cihaz kabulü.

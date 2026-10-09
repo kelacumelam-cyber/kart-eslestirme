@@ -79,3 +79,16 @@ Karar:
 - İkinci laboratuvar için kullanıcı sayısal puan vermedi; yalnız üç karakteri de beğendiğini bildirdi.
 
 Durum: **geri bildirim ve karar kaydı; bu commit oyun koduna dokunmaz.**
+
+## Animasyon ve oyun hissi hedefi (2026-10-09)
+
+Kullanıcı, laboratuvar prototiplerinde orijinal oyundaki animasyonların eksik olduğunu belirtti. Orijinaldeki 3D kart çevirme, doğru eşleşme parlaması, yanlış eşleşme sarsılması, konfeti, ses ve titreşim temeli korunacak ve iyileştirilecek.
+
+- Animasyonlar oyun durumunu açıkça anlatmalı; dokunuşa hızlı tepki vermeli.
+- Doğru çiftte kısa eşzamanlı vurgu ve yaylanma; yanlış çiftte kısa sarsılma ve kapanma; komboda ölçülü tepki.
+- Buz için çözülme/çatlama; yeni kart dalgasında sıralı giriş; ön izlemede geri sayım ve toplu kapanma; bitişte akıcı yıldız/kutlama.
+- Eski Android cihazlarda performans, transform/opacity ağırlıklı efektler, az parçacık ve hareket azaltma tercihi (prefers-reduced-motion).
+- Animasyon sırasında hızlı çift tıklama, gecikmiş zamanlayıcıların yeni bölümü etkilemesi ve eşleşme durumu gibi hataları test et.
+- Gerçek animasyon sürümü ayrı, geri alınabilir commit ve telefon testiyle değerlendirilecek.
+
+Durum: yalnız hedef kaydı, oyun kodu değiştirilmedi.

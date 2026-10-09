@@ -196,9 +196,10 @@ button:disabled{opacity:.45;cursor:default}
 .card-back{background:linear-gradient(145deg,#ffffff32,transparent 40%),linear-gradient(145deg,#479ba3,#174c62);border-color:#bce9dc}
 .card-back::after{color:var(--world-accent)}
 @media(prefers-reduced-motion:reduce){.primary,.secondary,.level-arrow{transition:none!important}}
+.level-arrow-spacer{display:block;min-width:45px;width:45px;flex-shrink:0}.level-nav .level-title{flex:1;text-align:center}.top{justify-content:flex-start}
 </style></head><body>
-<main id="app"><div class="top"><div><div class="eyebrow">10 Dünya · 100 Bölüm</div><h1>Hafıza Macerası</h1></div><span class="pill">Aile Sürümü</span></div>
-<div class="level-nav"><button id="previous" class="level-arrow" aria-label="Önceki bölüm">‹</button><span id="level-label" class="level-title"></span><button id="next" class="level-arrow" aria-label="Sonraki bölüm">›</button></div>
+<main id="app"><div class="top"><div><div class="eyebrow">10 Dünya · 100 Bölüm</div><h1>Hafıza Macerası</h1></div></div>
+<div class="level-nav"><button id="previous" class="level-arrow" aria-label="Önceki bölüm">‹</button><span id="level-label" class="level-title"></span><span class="level-arrow-spacer" aria-hidden="true"></span></div>
 <section class="panel"><div class="tag" id="mode-tag"></div><div class="name" id="mode-name"></div><div class="desc" id="mode-desc"></div><div class="stats"><div class="stat"><b id="pairs"></b><span>Çift</span></div><div class="stat"><b id="moves"></b><span>Hamle</span></div><div class="stat"><b id="time"></b><span>Süre</span></div></div></section>
 <div class="board-wrap"><div class="preview hidden" id="preview-text" aria-live="polite"></div><div class="board" id="board" aria-label="Eşleştirme tahtası"></div></div>
 <div id="result" class="result hidden" role="status"></div>
@@ -226,8 +227,8 @@ function update(){
  $("moves").textContent=String(state.moves);$("time").textContent=format(elapsed);
  $("previous").disabled=levelIndex===0;
  const canAdvance=levelIndex+2<=unlocked&&levelIndex+1<GAME.COUNT;
- $("next").disabled=!canAdvance;
- $("next").textContent=levelIndex===GAME.COUNT-1?"100 Bölüm Tamam!":"Sonraki Bölüm →";
+
+
  $("advance").disabled=!canAdvance;
  $("advance").textContent=levelIndex===GAME.COUNT-1?"100 Bölüm Tamam!":"Sonraki Bölüm →";
 }
@@ -328,7 +329,7 @@ function flip(tile){
  },response.event==="match-pending"?380:780);
 }
 $("previous").onclick=()=>{if(levelIndex>0){levelIndex--;render()}};
-$("next").onclick=()=>{if(levelIndex+2<=unlocked&&levelIndex+1<GAME.COUNT){levelIndex++;render()}};
+
 $("advance").onclick=()=>{if(levelIndex+2<=unlocked&&levelIndex+1<GAME.COUNT){levelIndex++;render()}};
 $("restart").onclick=render;
 

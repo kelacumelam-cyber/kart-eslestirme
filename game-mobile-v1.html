@@ -246,6 +246,10 @@ button:disabled{opacity:.45;cursor:default}
 .home-back{background:#ffffff19;color:#fff;border:1px solid #ffffff40;border-radius:12px;padding:6px 12px;margin-right:10px;font-size:1.2rem}
 #app .top{justify-content:flex-start}
 @media(max-height:690px){.home-art{height:155px;margin:8px auto}.home-card{transform:scale(.72)!important;transform-origin:top left}.home-brand{gap:4px}.home-brand h1{font-size:2.7rem}}
+
+#play-game{color:#ffd86f!important;text-shadow:0 1px 0 #6a4c16,0 0 12px #ffef9a66}
+@media(max-width:600px){.home-screen,.settings-screen{contain:layout style}}
+@media(prefers-reduced-motion:reduce){.card.spawn,.home-card{animation:none!important}}
 </style></head><body>
 <div id="home" class="home-screen">
  <div class="home-stars" aria-hidden="true">✦　✧　　 ✦</div>
@@ -273,7 +277,7 @@ const SYMBOLS=["🍎","🍓","🍋","🥝","🍊","🍇","🥑","🍉","🍒","�
 const LABELS={classic:"Klasik Eşleştirme",preview:"Ön İzleme",shape:"Şekilli Tahta",budget:"Hamle Ustalığı",ice:"Buz Kırıcı",waves:"Kart Dalgaları"};
 const DESCS={classic:"Kartları çevir ve çiftlerini bul.",preview:"Kartları kısa sürede hatırla, kapandıktan sonra eşleştir.",shape:"Boşluklu tahtada konumları hatırla.",budget:"Az hamleye çalış; hedefi aşınca oyun bitmez.",ice:"Eşleştirdikçe buzlu çiftler açılır.",waves:"İlk üç çiftten sonra yeni kart dalgası açılır."};
 const SAVE_KEY="kart_eslestirme_100_v1";
-function readUnlock(){try{const n=Number(localStorage.getItem(SAVE_KEY));return Number.isInteger(n)?Math.min(100,Math.max(1,n)):1}catch{return 1}}
+function readUnlock(){try{const value=localStorage.getItem(SAVE_KEY);if(value===null)return 1;const n=Number(value);return Number.isInteger(n)?Math.min(100,Math.max(1,n)):1}catch{return 1}}
 const SETTINGS_KEY="kart_eslestirme_settings_v1";
 function readSettings(){try{const x=JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}");return {sound:x.sound!==false,vibration:x.vibration!==false}}catch{return {sound:true,vibration:true}}}
 const gameSettings=readSettings();
@@ -301,7 +305,7 @@ function update(){
 
  $("advance").disabled=!canAdvance;
  $("advance").classList.toggle("ready",canAdvance);
- $("advance").textContent=levelIndex===GAME.COUNT-1?"100 Bölüm Tamam!":canAdvance?"Sonraki Bölüm →":"Sonraki Bölüm →";
+ $("advance").textContent=levelIndex===GAME.COUNT-1?"100 Bölüm Tamam!":"Sonraki Bölüm →";
 }
 
 let fireworksFrame=0,fireworksParticles=[],fireworksUntil=0,fireworksAudio=null;
@@ -311,6 +315,7 @@ function stopFireworks(){
  const canvas=$("fireworks");if(canvas){const c=canvas.getContext("2d");if(c)c.clearRect(0,0,canvas.width,canvas.height)}
 }
 function primeFireworksAudio(){
+ if(!gameSettings.sound)return;
  try{const AudioContextType=window.AudioContext||window.webkitAudioContext;if(!AudioContextType)return;
   fireworksAudio=fireworksAudio||new AudioContextType();
   if(fireworksAudio.state==="suspended")fireworksAudio.resume().catch(()=>{});
@@ -340,14 +345,16 @@ function launchFireworks(){
  const canvas=$("fireworks"),area=canvas.parentElement;
  const rect=area.getBoundingClientRect(),ratio=Math.min(window.devicePixelRatio||1,2);
  const w=Math.max(1,rect.width),h=Math.max(1,rect.height);
+ if(w<2||h<2)return;
  canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);
  const ctx=canvas.getContext("2d");if(!ctx)return;
  ctx.setTransform(ratio,0,0,ratio,0,0);
+ const lowPower=(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||(navigator.deviceMemory&&navigator.deviceMemory<=4);
  const colors=["#ffe08b","#69f3e6","#ff95cb","#c9a7ff","#fff7d5"];
  const bursts=[[.25,.32],[.73,.26],[.50,.54],[.16,.67],[.84,.64]];
  for(const [bi,[cx,cy]] of bursts.entries()){
-  for(let i=0;i<25;i++){
-   const a=Math.PI*2*i/25+(Math.random()-.5)*.22;
+  for(let i=0;i<(lowPower?12:25);i++){
+   const a=Math.PI*2*i/(lowPower?12:25)+(Math.random()-.5)*.22;
    const speed=55+Math.random()*95;
    fireworksParticles.push({x:w*cx,y:h*cy,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,
     r:1.7+Math.random()*2.4,color:colors[(i+bi)%colors.length],birth:bi*.17,life:.65+Math.random()*.35});
@@ -365,7 +372,7 @@ function launchFireworks(){
    ctx.globalAlpha=alpha;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(x,y,p.r*(.5+alpha*.5),0,Math.PI*2);ctx.fill();
   }
   ctx.globalAlpha=1;
-  if(t<1.8)fireworksFrame=requestAnimationFrame(frame);
+  if(t<(lowPower?1.35:1.8))fireworksFrame=requestAnimationFrame(frame);
   else{ctx.clearRect(0,0,w,h);fireworksFrame=0;fireworksParticles=[]}
  }
  fireworksFrame=requestAnimationFrame(frame);

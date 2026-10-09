@@ -237,6 +237,7 @@ const SAVE_KEY="kart_eslestirme_100_v1";
 function readUnlock(){try{const n=Number(localStorage.getItem(SAVE_KEY));return Number.isInteger(n)?Math.min(100,Math.max(1,n)):1}catch{return 1}}
 let unlocked=readUnlock(),levelIndex=unlocked-1,session=null, deck=[], tiles=[], serial=0, timers=[], clock=null, started=0, elapsed=0, firstCard=null;
 function persist(){try{localStorage.setItem(SAVE_KEY,String(unlocked))}catch{}}
+function saveFinalCompletion(){try{localStorage.setItem(SAVE_KEY+"_completed","1")}catch{}}
 function clearAsync(){timers.forEach(clearTimeout);timers=[];clearInterval(clock);clock=null}
 function later(fn,ms){const token=serial;const id=setTimeout(()=>{if(serial===token)fn()},ms);timers.push(id)}
 function format(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
@@ -411,7 +412,7 @@ function flip(tile){
        $("result").classList.remove("hidden");
        launchFireworks();
        if(levelIndex+1===unlocked&&unlocked<GAME.COUNT){unlocked++;persist()}
-       else if(levelIndex===GAME.COUNT-1){$("result").textContent+=" · Tebrikler, 100 bölüm tamamlandı!"}
+       else if(levelIndex===GAME.COUNT-1){saveFinalCompletion();$("result").textContent+=" · Tebrikler, 100 bölüm tamamlandı!"}
      }
    }else{
      for(const t of [previous,tile]){t.button.classList.remove("bad");flipFace(t,false)}

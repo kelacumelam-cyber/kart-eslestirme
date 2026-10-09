@@ -380,7 +380,7 @@ function launchFireworks(){
 function startClock(){if(started)return;started=Date.now();clock=setInterval(tickClock,1000)}
 function tickClock(){if(document.hidden||$("app").classList.contains("game-concealed")||!started||!session||session.state().phase==="completed")return;elapsed=Math.floor((Date.now()-started)/1000);update()}
 let backgroundAt=0;
-document.addEventListener("visibilitychange",()=>{
+if(typeof document.addEventListener==="function")document.addEventListener("visibilitychange",()=>{
  if(document.hidden){backgroundAt=Date.now();stopFireworks();clearInterval(clock);clock=null}
  else if(backgroundAt){if(started&&session&&session.state().phase!=="completed"&&!$("app").classList.contains("game-concealed")){started+=Date.now()-backgroundAt;clock=setInterval(tickClock,1000);tickClock()}backgroundAt=0}
 });

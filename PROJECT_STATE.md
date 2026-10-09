@@ -202,3 +202,10 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - `prefers-reduced-motion` durumunda parçacık animasyonu gösterilmez. Bölüm sıfırlama/geçişinde etkin animasyon temizlenir.
 - JS sözdizimi + sahte DOM'da 1. bölümün iki eşleşmeyle tamamlanması, havai fişek kare çiziminin planlanması ve sonraki bölüm kilidinin açılması kontrol edildi ve geçti. **Gerçek telefon ses/animasyon kabulü henüz yok.**
 - Commit'ler: `54d945c`, mobil ses hazırlama `58607ff`.
+
+## Kapanış hazırlığı — doğru APK hedefi (2026-10-09)
+- Kullanıcı acele etmeden 100 bölümlük **bizim mobil oyunu** tamamlayıp sonra başka bir konu danışmak istiyor. İşleri küçük ve kanıtlı adımlarla bitir.
+- Kritik paketleme düzeltmesi: `scripts/prepare-android-test.mjs` artık eski `game-100.html` yerine gerçek görsel geliştirmelerin bulunduğu `game-mobile-v1.html` dosyasını kaynak alır. Çevrimdışı `level-core.js` ve `level-100.js` dosyalarını paketlemeyi sürdürür.
+- Kod yolu/sözdizimi/statik paketleme kontrolleri geçti; **henüz yeni APK fiziksel olarak üretilmedi veya gerçek telefonda denenmedi**.
+- Commit: `522b637f3575170ca866fe1b0d3a7a345305717c`.
+- Bir sonraki adım: kayıt/kilit, 100. bölüm bitişi ve özel mekanikleri daha güçlü otomatik sınama; ardından en son Android APK derlemesi ve cihaz kabulü. Gereksiz arayüz/proje yeniden tasarımı yapma.

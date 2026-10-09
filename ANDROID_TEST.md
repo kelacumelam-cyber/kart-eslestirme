@@ -1,6 +1,6 @@
 # Yerel Android test APK
 
-Bu kurulum, **ana oyunu değil**, `experiments/level-flow-session-v1.html` içindeki 23 bölümlük deney sürümünü paketler. `src/level-core.js` çevrimdışı dahil edilir. Android Studio/SDK ve JDK gereklidir; internet yalnızca ilk npm/Gradle bağımlılık indirmelerinde gerekebilir.
+Bu kurulum, **100 bölümlük aile checkpoint sürümünü** (`game-100.html`) paketler. `src/level-core.js` ve `src/level-100.js` çevrimdışı dahil edilir. Ana `index.html` geri dönüş için korunur. Android Studio/SDK ve JDK gereklidir; internet yalnızca ilk npm/Gradle bağımlılık indirmelerinde gerekebilir.
 
 Windows PowerShell, repo kökünde:
 
@@ -10,6 +10,8 @@ npm.cmd run test:core
 npm.cmd run android:init
 npm.cmd run android:apk
 ```
+
+**Android projesini daha önce kurduysan `android:init` çalıştırma.** Güncel dosyaları alıp `npm.cmd install`, `npm.cmd run test:core`, ardından `npm.cmd run android:apk` çalıştırman yeterli.
 
 **Sonraki APK'lar:** HTML veya çekirdek güncellendiğinde `npm.cmd run android:apk` yeterli. Android projesi zaten oluşturulmuşsa `android:init` bir daha çalıştırılmaz.
 

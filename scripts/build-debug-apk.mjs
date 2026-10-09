@@ -1,0 +1,20 @@
+import {existsSync,mkdirSync,copyFileSync} from "node:fs";
+import {spawnSync} from "node:child_process";
+import {resolve} from "node:path";
+import {fileURLToPath} from "node:url";
+import {dirname} from "node:path";
+const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
+const android=resolve(root,"android");
+const gradle=process.platform==="win32"?"gradlew.bat":"./gradlew";
+if(!existsSync(resolve(android,process.platform==="win32"?"gradlew.bat":"gradlew")))
+ throw new Error("Android project missing. Run: npm.cmd run android:init");
+const result=spawnSync(gradle,["assembleDebug"],{cwd:android,stdio:"inherit",shell:process.platform==="win32"});
+if(result.error)throw result.error;
+if(result.status!==0)process.exit(result.status||1);
+const apk=resolve(android,"app/build/outputs/apk/debug/app-debug.apk");
+if(!existsSync(apk))throw new Error("Gradle passed but debug APK not found");
+const output=resolve(root,"dist");
+mkdirSync(output,{recursive:true});
+const target=resolve(output,"kart-eslestirme-test-debug.apk");
+copyFileSync(apk,target);
+console.log("APK ready:",target);

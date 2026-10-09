@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#0e3d43">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Kart Eşleştirme">
+<meta name="description" content="100 Bölümlük Mobil Uyumlu Kart Eşleştirme Zeka Oyunu">
+<title>Kart Eşleştirme · 100 Bölüm & Günlük Meydan Okuma</title>
+<style>
+:root{
+  --bg:#f4efe6;
+  --ink:#1c272a;
+  --card-back:#0f5c63;
+  --card-back2:#18818b;
+  --card-front:#ffffff;
+  --accent:#e5a01d;
+  --ok:#2f9e6b;
+  --bad:#e04f4f;
+  --muted:#627276;
+  --panel:#e6dfce;
+  --panel-active:#d8cfba;
+  --shadow:rgba(0,0,0,0.12);
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --bg:#0f1719;
+    --ink:#eef2ee;
+    --card-back:#1b7f88;
+    --card-back2:#115c63;
+    --card-front:#1b282c;
+    --accent:#f2b83b;
+    --ok:#42c286;
+    --bad:#f05d5d;
+    --muted:#91a3a7;
+    --panel:#192529;
+    --panel-active:#23343a;
+    --shadow:rgba(0,0,0,0.35);
+  }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html,body{
+  margin:0;padding:0;
+  width:100%;height:100%;
+  overflow:hidden;
+  touch-action:manipulation;
+}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  display:flex;justify-content:center;align-items:stretch;
+}
+#app{
+  width:100%;max-width:460px;
+  height:100dvh;height:100vh;
+  display:flex;flex-direction:column;
+  padding:env(safe-area-inset-top, 6px) 10px env(safe-area-inset-bottom, 6px) 10px;
+  position:relative;
+}
+
+/* TOP HEADER */
+.header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:4px 2px;gap:6px;flex-shrink:0;
+}
+.title-box{display:flex;align-items:center;gap:6px}
+.title-box h1{
+  font-size:1.1rem;margin:0;font-weight:800;letter-spacing:-0.2px;
+  display:flex;align-items:center;gap:5px;
+}
+.world-pill{
+  font-size:0.72rem;padding:2px 7px;border-radius:12px;
+  background:var(--panel);color:var(--muted);font-weight:600;
+  display:inline-flex;align-items:center;gap:3px;
+}
+.header-actions{display:flex;gap:5px}
+.icon-btn{
+  background:var(--panel);color:var(--ink);border:0;border-radius:10px;
+  padding:5px 8px;font-size:1rem;cursor:pointer;display:inline-flex;
+  align-items:center;justify-content:center;min-width:36px;height:34px;
+  transition:background .15s,transform .1s;
+}
+.icon-btn:active{transform:scale(0.92);background:var(--panel-active)}
+.icon-btn.daily-active{
+  background:var(--accent);color:#000;font-weight:700;
+}
+
+/* SUB-BAR: MODE & JOKERS */
+.action-subbar{
+  display:flex;justify-content:space-between;align-items:center;
+  gap:6px;margin:2px 0 4px;flex-shrink:0;
+}
+.mode-toggle{
+  display:inline-flex;background:var(--panel);border-radius:20px;padding:2px;gap:2px;
+}
+.mode-opt{
+  border:0;background:none;font-size:0.72rem;font-weight:700;
+  padding:3px 8px;border-radius:16px;cursor:pointer;color:var(--muted);
+  transition:background .2s,color .2s;
+}
+.mode-opt.active{
+  background:var(--ink);color:var(--bg);
+}
+.jokers-box{display:flex;gap:5px}
+.joker-btn{
+  background:var(--panel);border:1px solid rgba(0,0,0,0.06);border-radius:14px;
+  padding:3px 9px;font-size:0.75rem;font-weight:700;color:var(--ink);
+  cursor:pointer;display:inline-flex;align-items:center;gap:4px;
+  transition:all .15s;
+}
+.joker-btn:active{transform:scale(0.94)}
+.joker-btn[disabled]{opacity:0.35;cursor:not-allowed;filter:grayscale(60%)}
+
+/* STATS ROW */
+.stats-bar{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:5px;
+  margin:2px 0 6px;flex-shrink:0;
+}
+.stat{
+  background:var(--panel);border-radius:10px;padding:5px 3px;
+  text-align:center;box-shadow:0 1px 3px var(--shadow);
+}
+.stat b{display:block;font-size:1.02rem;font-variant-numeric:tabular-nums;font-weight:700}
+.stat span{font-size:0.65rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.3px}
+.stat.combo-stat b{color:var(--accent)}
+.stat.time-stat.warning b{color:var(--bad);animation:pulse-red .8s infinite alternate}
+@keyframes pulse-red{from{transform:scale(1)}to{transform:scale(1.12)}}
+
+/* BOARD CONTAINER */
+#board-container{
+  flex:1;min-height:0;
+  display:flex;align-items:center;justify-content:center;
+  width:100%;position:relative;overflow:hidden;
+}
+#board{
+  display:grid;
+  perspective:900px;
+  margin:auto;
+}
+
+/* CARDS */
+.card{
+  position:relative;border:0;padding:0;background:none;
+  border-radius:10px;transform-style:preserve-3d;
+  transition:transform .26s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor:pointer;outline:none;
+}
+.card.open{transform:rotateY(180deg)}
+.card.matched{
+  transform:rotateY(180deg) scale(0.94);
+  pointer-events:none;
+  opacity:0.38;
+  filter:grayscale(15%);
+  transition:transform .3s, opacity .4s;
+}
+.face{
+  position:absolute;inset:0;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  backface-visibility:hidden;-webkit-backface-visibility:hidden;
+}
+.back{
+  background:radial-gradient(circle at 35% 25%,var(--card-back2),var(--card-back) 75%);
+  border:2px solid rgba(255,255,255,.2);
+  box-shadow:inset 0 -3px 6px rgba(0,0,0,.2), 0 2px 4px var(--shadow);
+}
+.back::before{
+  content:"";position:absolute;inset:9%;
+  border:1.2px solid rgba(255,255,255,.24);border-radius:7px;
+}
+.back::after{
+  content:"";position:absolute;width:24%;aspect-ratio:1;
+  background:var(--accent);opacity:.9;transform:rotate(45deg);border-radius:3px;
+  box-shadow:0 0 0 3px rgba(255,255,255,.14);
+}
+.front{
+  background:var(--card-front);transform:rotateY(180deg);
+  border:2px solid var(--card-back2);
+  font-size:var(--em, 1.8rem);
+  box-shadow:0 2px 5px var(--shadow);
+}
+.card.hit .front{
+  border-color:var(--ok);
+  box-shadow:0 0 0 3px var(--ok),0 0 16px var(--ok);
+}
+.card.hint-glow .back{
+  box-shadow:0 0 0 3px var(--accent), 0 0 18px var(--accent);
+  animation:glow-pulse .45s infinite alternate;
+}
+@keyframes glow-pulse{
+  from{transform:scale(1)}
+  to{transform:scale(1.08)}
+}
+.card.bad .front{
+  border-color:var(--bad);
+  box-shadow:0 0 0 3px var(--bad);
+  animation:shake .32s ease-in-out;
+}
+@keyframes shake{
+  0%,100%{transform:rotateY(180deg) translateX(0)}
+  25%{transform:rotateY(180deg) translateX(-4px)}
+  75%{transform:rotateY(180deg) translateX(4px)}
+}
+
+/* BOTTOM ACTION BAR */
+.bottom-bar{
+  display:flex;gap:8px;padding:5px 0;flex-shrink:0;justify-content:center;
+}
+.btn{
+  font:inherit;cursor:pointer;border:0;border-radius:10px;
+  padding:9px 16px;background:var(--ink);color:var(--bg);
+  font-weight:700;font-size:0.9rem;flex:1;text-align:center;
+  transition:transform .1s,opacity .15s;
+}
+.btn:active{transform:scale(0.96)}
+.btn.alt{background:var(--panel);color:var(--ink)}
+.btn.daily-btn{
+  background:linear-gradient(135deg, #e5a01d, #c27d00);color:#fff;
+}
+
+/* MODALS */
+.overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.65);
+  backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+  display:none;align-items:center;justify-content:center;
+  padding:14px;z-index:100;
+}
+.overlay.show{display:flex}
+.dialog{
+  background:var(--bg);border-radius:18px;padding:20px;
+  max-width:430px;width:100%;text-align:center;
+  max-height:92vh;display:flex;flex-direction:column;
+  box-shadow:0 12px 30px rgba(0,0,0,0.35);
+}
+.dialog h2{margin:0 0 4px;font-size:1.35rem}
+.stars{font-size:2.2rem;color:var(--accent);margin:4px 0}
+.dialog p{color:var(--muted);margin:6px 0 14px;font-size:0.9rem}
+.dialog .stats-summary{
+  background:var(--panel);border-radius:12px;padding:12px;
+  margin:8px 0 14px;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;
+}
+.dialog .stats-summary div b{display:block;font-size:1.1rem}
+.dialog .stats-summary div span{font-size:0.68rem;color:var(--muted)}
+
+/* LEVEL SELECTOR TABS */
+.world-tabs{
+  display:flex;gap:6px;overflow-x:auto;padding:4px 2px 10px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+}
+.world-tabs::-webkit-scrollbar{display:none}
+.tab-btn{
+  background:var(--panel);border:0;border-radius:20px;padding:6px 12px;
+  font-size:0.8rem;font-weight:700;white-space:nowrap;cursor:pointer;
+  color:var(--muted);display:flex;align-items:center;gap:4px;
+}
+.tab-btn.active{
+  background:var(--ink);color:var(--bg);
+}
+.levels-scroll{
+  flex:1;overflow-y:auto;padding:4px;
+  display:grid;grid-template-columns:repeat(5,1fr);gap:8px;
+}
+.lvl-btn{
+  background:var(--panel);border:0;border-radius:12px;
+  padding:10px 2px;font-size:0.95rem;font-weight:800;color:var(--ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  cursor:pointer;gap:2px;position:relative;
+}
+.lvl-btn.cur{outline:3px solid var(--accent);outline-offset:1px}
+.lvl-btn[disabled]{opacity:0.38;cursor:not-allowed}
+.lvl-stars{font-size:0.72rem;color:var(--accent)}
+
+/* THEME SELECTOR GRID */
+.theme-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin:10px 0 16px;
+}
+.theme-card{
+  background:var(--panel);border-radius:12px;padding:10px 6px;cursor:pointer;
+  border:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:6px;
+}
+.theme-card.active{border-color:var(--accent)}
+.theme-preview{
+  width:42px;height:52px;border-radius:6px;box-shadow:0 2px 6px var(--shadow);
+  display:flex;align-items:center;justify-content:center;
+}
+.theme-preview::after{
+  content:"";width:12px;height:12px;background:var(--accent);transform:rotate(45deg);border-radius:2px;
+}
+
+/* DAILY BANNER CARD */
+.daily-banner{
+  background:linear-gradient(135deg, rgba(229,160,29,0.18), rgba(24,129,139,0.18));
+  border:1.5px solid var(--accent);border-radius:14px;padding:14px;margin-bottom:12px;text-align:left;
+}
+.daily-banner h3{margin:0 0 4px;font-size:1.05rem;display:flex;justify-content:space-between}
+.daily-badge{font-size:0.75rem;background:var(--accent);color:#000;padding:2px 8px;border-radius:10px;font-weight:700}
+
+/* CONFETTI CANVAS */
+#confetti-canvas{
+  position:fixed;inset:0;width:100%;height:100%;
+  pointer-events:none;z-index:90;
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="header">
+    <div class="title-box">
+      <h1>🃏 Kart Eşleştirme</h1>
+      <span class="world-pill" id="world-badge">🍎 Dünya 1</span>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="daily-btn" aria-label="Günlük Görev" title="Günün Meydan Okuması">📅</button>
+      <button class="icon-btn" id="theme-btn" aria-label="Temalar" title="Kart Teması">🎨</button>
+      <button class="icon-btn" id="sound-btn" aria-label="Ses" title="Ses">🔊</button>
+      <button class="icon-btn" id="haptic-btn" aria-label="Titreşim" title="Titreşim">📳</button>
+      <button class="icon-btn" id="menu-btn" aria-label="Bölümler" title="Bölümler">🗺️</button>
+    </div>
+  </div>
+
+  <!-- MOD SEÇİCİ VE JOKERLER -->
+  <div class="action-subbar">
+    <div class="mode-toggle">
+      <button class="mode-opt active" id="mode-relaxed">🧘 Rahat</button>
+      <button class="mode-opt" id="mode-timed">⏱️ Zamana Karşı</button>
+    </div>
+    <div class="jokers-box">
+      <button class="joker-btn" id="joker-peek" title="Tüm kartları 1 saniyeliğine gösterir">👁️ Göz At (<span id="peek-cnt">1</span>)</button>
+      <button class="joker-btn" id="joker-hint" title="Eşleşen bir çifti işaret eder">💡 İpucu (<span id="hint-cnt">1</span>)</button>
+    </div>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat"><b id="level-display-box"><span id="lv">1</span>/100</b><span>Bölüm</span></div>
+    <div class="stat"><b id="pr">0/2</b><span>Çift</span></div>
+    <div class="stat"><b id="mv">0</b><span>Hamle</span></div>
+    <div class="stat combo-stat"><b id="cb">x1</b><span>Kombo</span></div>
+  </div>
+
+  <div id="board-container">
+    <div id="board" aria-live="polite"></div>
+  </div>
+
+  <div class="bottom-bar">
+    <div class="stat time-stat" id="time-stat-box" style="min-width:76px;flex:0 0 auto"><b id="tm">0:00</b><span>Süre</span></div>
+    <button class="btn alt" id="restart-btn">Yeniden Başlat</button>
+    <button class="btn" id="levels-modal-btn">Bölümler (100)</button>
+  </div>
+</div>
+
+<!-- WIN MODAL -->
+<div class="overlay" id="win-modal">
+  <div class="dialog">
+    <h2 id="win-title">Bölüm Tamamlandı! 🎉</h2>
+    <div class="stars" id="win-stars">★★★</div>
+    <div class="stats-summary">
+      <div><b id="w-moves">0</b><span>Hamle</span></div>
+      <div><b id="w-time">0:00</b><span>Süre</span></div>
+      <div><b id="w-score">0</b><span>Puan</span></div>
+    </div>
+    <p id="win-desc"></p>
+    <div style="display:flex;gap:8px">
+      <button class="btn alt" id="win-again-btn">Tekrar Oyna</button>
+      <button class="btn" id="win-next-btn">Sonraki Bölüm</button>
+    </div>
+  </div>
+</div>
+
+<!-- TIME OUT (GAME OVER) MODAL -->
+<div class="overlay" id="timeout-modal">
+  <div class="dialog">
+    <h2 style="color:var(--bad)">⏳ Süre Doldu!</h2>
+    <p>Zamana karşı yarışta süren bitti. Endişelenme, tekrar deneyerek bölümü geçebilirsin!</p>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn alt" id="timeout-switch-mode">🧘 Rahat Mod'a Geç</button>
+      <button class="btn" id="timeout-retry-btn">Tekrar Dene</button>
+    </div>
+  </div>
+</div>
+
+<!-- DAILY CHALLENGE MODAL -->
+<div class="overlay" id="daily-modal">
+  <div class="dialog">
+    <h2>📅 Günlük Meydan Okuma</h2>
+    <div class="daily-banner">
+      <h3>
+        <span id="daily-date-str">9 Ekim 2026</span>
+        <span class="daily-badge" id="daily-status-badge">YENİ</span>
+      </h3>
+      <p style="margin:4px 0 0;font-size:0.85rem;color:var(--ink)" id="daily-info-text">
+        Her gün yenilenen özel bulmaca! Tamamla, günlük serini koru.
+      </p>
+      <div style="margin-top:8px;font-size:0.85rem;font-weight:700;color:var(--accent)" id="daily-streak-text">
+        🔥 Günlük Seri: 0 Gün
+      </div>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn alt" id="close-daily-btn">Kapat</button>
+      <button class="btn daily-btn" id="start-daily-btn">Meydan Oku 🚀</button>
+    </div>
+  </div>
+</div>
+
+<!-- THEME SELECTION MODAL -->
+<div class="overlay" id="theme-modal">
+  <div class="dialog">
+    <h2>🎨 Kart Temaları</h2>
+    <p style="margin:0 0 10px">Kart arkası desenini ve rengini istediğin gibi seç.</p>
+    <div class="theme-grid" id="theme-grid"></div>
+    <button class="btn" id="close-theme-btn" style="margin-top:8px">Tamam</button>
+  </div>
+</div>
+
+<!-- LEVEL SELECTION MODAL -->
+<div class="overlay" id="level-modal">
+  <div class="dialog" style="height:86vh">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <h2 style="margin:0">Bölümler (1-100)</h2>
+      <span style="font-weight:700;color:var(--accent);font-size:0.95rem" id="total-stars-badge">⭐ 0/300</span>
+    </div>
+    <p style="margin:0 0 8px">10 farklı tema dünyası. Bitirdiğin bölüm sonrakiyi açar.</p>
+    
+    <div class="world-tabs" id="world-tabs"></div>
+    <div class="levels-scroll" id="levels-grid"></div>
+    
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn alt" id="reset-prog-btn" style="flex:1">Sıfırla</button>
+      <button class="btn" id="close-modal-btn" style="flex:1">Kapat</button>
+    </div>
+  </div>
+</div>
+
+<canvas id="confetti-canvas"></canvas>
+
+<script>
+// --- SES & TİTREŞİM YÖNETİCİSİ ---
+class SoundManager {
+  constructor() {
+    this.ctx = null;
+    this.enabled = localStorage.getItem("kart_ses") !== "0";
+    this.haptic = localStorage.getItem("kart_titresim") !== "0";
+  }
+  init() {
+    if (!this.ctx) {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (AC) this.ctx = new AC();
+    }
+    if (this.ctx && this.ctx.state === "suspended") {
+      this.ctx.resume();
+    }
+  }
+  toggle() {
+    this.enabled = !this.enabled;
+    localStorage.setItem("kart_ses", this.enabled ? "1" : "0");
+    return this.enabled;
+  }
+  toggleHaptic() {
+    this.haptic = !this.haptic;
+    localStorage.setItem("kart_titresim", this.haptic ? "1" : "0");
+    if (this.haptic && navigator.vibrate) navigator.vibrate(25);
+    return this.haptic;
+  }
+  vibe(pattern) {
+    if (this.haptic && navigator.vibrate) {
+      try { navigator.vibrate(pattern); } catch(e) {}
+    }
+  }
+  playTone(freq, type="sine", dur=0.08, vol=0.2, endFreq=null) {
+    if (!this.enabled) return;
+    try {
+      this.init();
+      if (!this.ctx) return;
+      const osc = this.ctx.createOscillator();
+      const gain = this.ctx.createGain();
+      const now = this.ctx.currentTime;
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, now);
+      if (endFreq) osc.frequency.exponentialRampToValueAtTime(Math.max(20, endFreq), now + dur);
+      gain.gain.setValueAtTime(vol, now);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + dur);
+      osc.connect(gain);
+      gain.connect(this.ctx.destination);
+      osc.start(now);
+      osc.stop(now + dur);
+    } catch(e) {}
+  }
+  flip() {
+    this.vibe(12);
+    this.playTone(340, "sine", 0.06, 0.18, 200);
+  }
+  match(combo = 1) {
+    this.vibe([25, 30, 45]);
+    const f = 460 + Math.min(combo * 45, 260);
+    this.playTone(f, "triangle", 0.11, 0.25, f * 1.25);
+    setTimeout(() => this.playTone(f * 1.5, "sine", 0.18, 0.22), 80);
+  }
+  bad() {
+    this.vibe(55);
+    this.playTone(210, "sawtooth", 0.14, 0.18, 130);
+  }
+  joker() {
+    this.vibe(40);
+    this.playTone(580, "sine", 0.12, 0.25, 780);
+  }
+  win() {
+    this.vibe([40, 50, 40, 50, 100]);
+    if (!this.enabled) return;
+    const notes = [440, 554, 659, 880];
+    notes.forEach((f, i) => {
+      setTimeout(() => this.playTone(f, "sine", 0.22, 0.25), i * 110);
+    });
+  }
+}
+const sound = new SoundManager();
+
+// --- KART TEMALARI ---
+const THEMES = [
+  { id: "teal", name: "Turkuaz", c1: "#0f5c63", c2: "#18818b", accent: "#e5a01d" },
+  { id: "gold", name: "Kraliyet Altını", c1: "#7c5c08", c2: "#b88a14", accent: "#ffd54f" },
+  { id: "cosmic", name: "Kozmik Mor", c1: "#2d164d", c2: "#542a8a", accent: "#b388ff" },
+  { id: "ruby", name: "Yakut Kırmızı", c1: "#6d1515", c2: "#9e2525", accent: "#ff8a80" },
+  { id: "dark", name: "Siber Gece", c1: "#1a2124", c2: "#2d3a3f", accent: "#00e5ff" }
+];
+let currentThemeId = localStorage.getItem("kart_tema") || "teal";
+
+function applyTheme(tId) {
+  const t = THEMES.find(x => x.id === tId) || THEMES[0];
+  currentThemeId = t.id;
+  localStorage.setItem("kart_tema", t.id);
+  document.documentElement.style.setProperty("--card-back", t.c1);
+  document.documentElement.style.setProperty("--card-back2", t.c2);
+  document.documentElement.style.setProperty("--accent", t.accent);
+}
+applyTheme(currentThemeId);
+
+// --- 10 DÜNYA VE 250+ EMOJİ KÜTÜPHANESİ ---
+const WORLDS = [
+  { id: 1, name: "Meyve Bahçesi", icon: "🍎", emojis: ["🍎","🍌","🍇","🍓","🍒","🥝","🍉","🍍","🍑","🍋","🍐","🍊","🥥","🥑","🍈","🥭","🫐","🍏","🍅","🥕","🥦","🥒","🌽","🫑","🍄"] },
+  { id: 2, name: "Sevimli Hayvanlar", icon: "🐶", emojis: ["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🐔","🐧","🐦","🐤","🦆","🦅","🦉","🦇","🐺","🐗"] },
+  { id: 3, name: "Vahşi Doğa", icon: "🦁", emojis: ["🦒","🦓","🦔","🐘","🦏","🦛","🐪","🐫","🦘","🦬","🐃","🐂","🐎","🐖","🐑","🦙","🐐","🦌","🦥","🦦","🦨","🦡","🐿️","🦫","🐆"] },
+  { id: 4, name: "Derin Deniz", icon: "🐬", emojis: ["🐙","🦑","🦐","🦞","🦀","🐡","🐠","🐟","🐬","🐳","🐋","🦈","🦭","🐊","🐢","🐚","🪸","🪼","🦦","🦆","🦩","🦢","🐧","⛵","🏖️"] },
+  { id: 5, name: "Gurme Lezzetler", icon: "🍕", emojis: ["🍕","🍔","🍟","🌭","🍿","🥞","🧇","🧀","🍗","🥪","🌮","🌯","🍣","🍜","🍦","🍩","🎂","🧁","🥧","🍫","🍬","🥨","🥐","🥯","🍳"] },
+  { id: 6, name: "Botanik & Çiçek", icon: "🌸", emojis: ["🌸","🌺","🌻","🌹","🌷","🌼","💐","🍄","🌾","🍀","🍁","🍂","🍃","🌿","🌱","🌴","🌵","🪴","🌲","🌳","🎋","🎍","🪷","🪻","☘️"] },
+  { id: 7, name: "Kozmik Evren", icon: "🚀", emojis: ["🚀","🛸","🛰️","🪐","🌍","🌕","☀️","⭐","🌟","🌠","☄️","🌌","👨‍🚀","👾","👽","🔭","📡","🌙","🌒","🌔","🌑","✨","⚡","💫","🛸"] },
+  { id: 8, name: "Hız & Taşıtlar", icon: "🏎️", emojis: ["🏎️","🚗","🚕","🚙","🚌","🚎","🚑","🚒","🚓","🚜","🛵","🏍️","🚲","🚂","✈️","🚁","⛵","🚤","🛳️","🛩️","🚊","🚅","🛴","🛹","🛞"] },
+  { id: 9, name: "Spor Arenası", icon: "🏆", emojis: ["⚽","🏀","🏈","⚾","🥎","🎾","🏐","🎱","🏓","🏸","🥊","🎳","🛹","🎿","🏆","🥇","🥈","🥉","🎯","⛳","🥋","⛸️","🎣","🤿","🎲"] },
+  { id: 10, name: "Sihir & Efsane", icon: "🔮", emojis: ["🔮","👑","💎","🗡️","🛡️","🏹","🏺","📜","🗝️","🪄","🏰","🐉","🦄","🧙","🪙","⚡","🔥","✨","🪬","🧞","🎭","🧝","🦹","🧙‍♂️","🛡️"] }
+];
+
+const MAX_LEVEL = 100;
+const $ = id => document.getElementById(id);
+
+let level = 1, unlocked = 1, stars = {}, scores = {};
+let firstCard = null, pendingMismatch = null, isLocked = false;
+let moves = 0, found = 0, totalPairs = 2, combo = 1;
+let t0 = 0, timer = null, started = false;
+let currentWorldTab = 1;
+let isDailyActive = false;
+
+// MOD VE JOKER DURUMLARI
+let gameMode = localStorage.getItem("kart_mod") || "relaxed";
+let timeLeft = 0, totalTimeTarget = 0;
+let peekCharges = 1, hintCharges = 1;
+
+// LOCAL STORAGE YÜKLE
+try {
+  const saved = JSON.parse(localStorage.getItem("kartOyunu100") || "{}");
+  unlocked = saved.unlocked || 1;
+  stars = saved.stars || {};
+  scores = saved.scores || {};
+  level = Math.min(unlocked, MAX_LEVEL);
+} catch(e) {}
+
+function saveProgress() {
+  try {
+    localStorage.setItem("kartOyunu100", JSON.stringify({ unlocked, stars, scores }));
+  } catch(e) {}
+}
+
+// GÜNLÜK MEYDAN OKUMA TARİHİ & SEED MOTORU
+function getTodayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+
+function getDailySeed() {
+  const d = new Date();
+  return d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate();
+}
+
+function seededShuffle(arr, seed) {
+  const a = arr.slice();
+  let s = seed;
+  for (let i = a.length - 1; i > 0; i--) {
+    s = (s * 9301 + 49297) % 233280;
+    const rnd = s / 233280;
+    const j = Math.floor(rnd * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getDailyConfig() {
+  const seed = getDailySeed();
+  const worldIndex = seed % WORLDS.length;
+  const world = WORLDS[worldIndex];
+  // Günlük görev: 4x5 veya 4x6 dengeli ızgara
+  const cols = 4;
+  const rows = (seed % 2 === 0) ? 5 : 6;
+  const pairs = (cols * rows) / 2;
+  return { world, cols, rows, pairs, seed };
+}
+
+function getLevelConfig(l) {
+  if (isDailyActive) {
+    const d = getDailyConfig();
+    return { level: "GÜN", world: d.world, cols: d.cols, rows: d.rows, pairs: d.pairs };
+  }
+
+  const worldIndex = Math.min(Math.floor((l - 1) / 10), 9);
+  const world = WORLDS[worldIndex];
+  
+  let cols, rows;
+  if (l <= 4)       { cols = 2; rows = 2; }
+  else if (l <= 10) { cols = 2; rows = 3; }
+  else if (l <= 18) { cols = 2; rows = 4; }
+  else if (l <= 28) { cols = 3; rows = 4; }
+  else if (l <= 40) { cols = 4; rows = 4; }
+  else if (l <= 55) { cols = 4; rows = 5; }
+  else if (l <= 70) { cols = 4; rows = 6; }
+  else if (l <= 85) { cols = 5; rows = 6; }
+  else if (l <= 95) { cols = 6; rows = 6; }
+  else              { cols = 6; rows = 7; }
+
+  const pairs = (cols * rows) / 2;
+  return { level: l, world, cols, rows, pairs };
+}
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sc = Math.max(0, s % 60);
+  return m + ":" + String(sc).padStart(2, "0");
+}
+
+function clearPendingMismatch() {
+  if (pendingMismatch) {
+    clearTimeout(pendingMismatch.timerId);
+    const [a, b] = pendingMismatch.cards;
+    a.classList.remove("open", "bad");
+    b.classList.remove("open", "bad");
+    pendingMismatch = null;
+  }
+}
+
+// BÖLÜMÜ BAŞLAT
+function startLevel(l, isDaily = false) {
+  isDailyActive = isDaily;
+  if (!isDaily) {
+    level = Math.max(1, Math.min(l, MAX_LEVEL));
+    $("daily-btn").classList.remove("daily-active");
+  } else {
+    $("daily-btn").classList.add("daily-active");
+  }
+
+  const cfg = getLevelConfig(level);
+  totalPairs = cfg.pairs;
+  firstCard = null;
+  isLocked = false;
+  clearPendingMismatch();
+  moves = 0;
+  found = 0;
+  combo = 1;
+  started = false;
+
+  peekCharges = 1;
+  hintCharges = 1;
+  $("peek-cnt").textContent = peekCharges;
+  $("hint-cnt").textContent = hintCharges;
+  $("joker-peek").disabled = false;
+  $("joker-hint").disabled = false;
+
+  clearInterval(timer);
+  $("time-stat-box").classList.remove("warning");
+
+  if (gameMode === "timed") {
+    totalTimeTarget = totalPairs * 8 + 6;
+    timeLeft = totalTimeTarget;
+    $("tm").textContent = fmtTime(timeLeft);
+  } else {
+    $("tm").textContent = "0:00";
+  }
+
+  $("mv").textContent = "0";
+  if (isDailyActive) {
+    $("level-display-box").innerHTML = `<span>GÜN</span>`;
+    $("world-badge").innerHTML = `📅 Günün Görevi`;
+  } else {
+    $("level-display-box").innerHTML = `<span id="lv">${level}</span>/100`;
+    $("world-badge").innerHTML = `${cfg.world.icon} ${cfg.world.name}`;
+  }
+  $("pr").textContent = "0/" + totalPairs;
+  $("cb").textContent = "x1";
+
+  // EMOJİLER
+  let deck;
+  if (isDailyActive) {
+    const d = getDailyConfig();
+    const shuffledEmojis = seededShuffle(d.world.emojis, d.seed);
+    const selected = shuffledEmojis.slice(0, totalPairs);
+    deck = seededShuffle([...selected, ...selected], d.seed + 77);
+  } else {
+    const availableEmojis = shuffle(cfg.world.emojis);
+    const selected = availableEmojis.slice(0, totalPairs);
+    deck = shuffle([...selected, ...selected]);
+  }
+
+  const board = $("board");
+  board.innerHTML = "";
+  
+  deck.forEach((emoji, idx) => {
+    const card = document.createElement("button");
+    card.className = "card";
+    card.dataset.emoji = emoji;
+    card.dataset.idx = idx;
+    card.setAttribute("aria-label", "Kapalı kart");
+    card.innerHTML = `<span class="face back"></span><span class="face front">${emoji}</span>`;
+    card.onclick = () => flipCard(card);
+    board.appendChild(card);
+  });
+
+  layoutBoard(cfg.cols, cfg.rows);
+}
+
+// MOBİL DİKEY EKRANA TAM OTURAN ÖLÇEKLENDİRME
+function layoutBoard(cols, rows) {
+  const container = $("board-container");
+  if (!container) return;
+  const availW = container.clientWidth - 14;
+  const availH = container.clientHeight - 14;
+  const gap = cols >= 6 ? 4 : 6;
+
+  const cellW = (availW - (cols - 1) * gap) / cols;
+  const cellH = (availH - (rows - 1) * gap) / rows;
+  const cellSize = Math.floor(Math.min(cellW, cellH, 86));
+
+  const boardW = cellSize * cols + (cols - 1) * gap;
+  const boardH = cellSize * rows + (rows - 1) * gap;
+
+  const board = $("board");
+  board.style.gridTemplateColumns = `repeat(${cols}, ${cellSize}px)`;
+  board.style.gridTemplateRows = `repeat(${rows}, ${cellSize}px)`;
+  board.style.gap = `${gap}px`;
+  board.style.width = `${boardW}px`;
+  board.style.height = `${boardH}px`;
+  board.style.setProperty("--em", `${Math.max(1.1, cellSize * 0.5)}px`);
+}
+
+function runTimer() {
+  if (gameMode === "timed") {
+    timer = setInterval(() => {
+      timeLeft--;
+      $("tm").textContent = fmtTime(timeLeft);
+      if (timeLeft <= 8) $("time-stat-box").classList.add("warning");
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        onTimeOut();
+      }
+    }, 1000);
+  } else {
+    timer = setInterval(() => {
+      const elapsed = Math.floor((Date.now() - t0) / 1000);
+      $("tm").textContent = fmtTime(elapsed);
+    }, 500);
+  }
+}
+
+function onTimeOut() {
+  sound.bad();
+  $("timeout-modal").classList.add("show");
+}
+
+function flipCard(card) {
+  if (isLocked || card.classList.contains("matched") || card === firstCard) return;
+
+  if (pendingMismatch) clearPendingMismatch();
+
+  if (!started) {
+    started = true;
+    t0 = Date.now();
+    runTimer();
+  }
+
+  sound.flip();
+  card.classList.add("open");
+
+  if (!firstCard) {
+    firstCard = card;
+    return;
+  }
+
+  moves++;
+  $("mv").textContent = moves;
+  const a = firstCard;
+  const b = card;
+  firstCard = null;
+
+  if (a.dataset.emoji === b.dataset.emoji) {
+    sound.match(combo);
+    a.classList.add("hit");
+    b.classList.add("hit");
+    combo++;
+    $("cb").textContent = `x${combo}`;
+
+    if (gameMode === "timed") {
+      timeLeft += 4;
+      $("tm").textContent = fmtTime(timeLeft);
+    }
+
+    setTimeout(() => {
+      a.classList.remove("hit");
+      b.classList.remove("hit");
+      a.classList.add("matched");
+      b.classList.add("matched");
+      found++;
+      $("pr").textContent = `${found}/${totalPairs}`;
+      
+      if (found === totalPairs) {
+        setTimeout(finishLevel, 450);
+      }
+    }, 300);
+
+  } else {
+    sound.bad();
+    combo = 1;
+    $("cb").textContent = "x1";
+    a.classList.add("bad");
+    b.classList.add("bad");
+
+    const timerId = setTimeout(() => {
+      a.classList.remove("open", "bad");
+      b.classList.remove("open", "bad");
+      pendingMismatch = null;
+    }, 800);
+
+    pendingMismatch = { cards: [a, b], timerId };
+  }
+}
+
+// --- JOKERLER ---
+function usePeekJoker() {
+  if (peekCharges <= 0 || isLocked) return;
+  peekCharges--;
+  $("peek-cnt").textContent = peekCharges;
+  $("joker-peek").disabled = true;
+  sound.joker();
+  clearPendingMismatch();
+  isLocked = true;
+
+  const unopened = Array.from(document.querySelectorAll(".card:not(.matched):not(.open)"));
+  unopened.forEach(c => c.classList.add("open"));
+
+  setTimeout(() => {
+    unopened.forEach(c => c.classList.remove("open"));
+    isLocked = false;
+  }, 1100);
+}
+
+function useHintJoker() {
+  if (hintCharges <= 0 || isLocked) return;
+  hintCharges--;
+  $("hint-cnt").textContent = hintCharges;
+  $("joker-hint").disabled = true;
+  sound.joker();
+  clearPendingMismatch();
+
+  const activeCards = Array.from(document.querySelectorAll(".card:not(.matched)"));
+  const map = {};
+  activeCards.forEach(c => {
+    const e = c.dataset.emoji;
+    if (!map[e]) map[e] = [];
+    map[e].push(c);
+  });
+
+  const pairKey = Object.keys(map).find(k => map[k].length === 2);
+  if (!pairKey) return;
+
+  const [c1, c2] = map[pairKey];
+  c1.classList.add("hint-glow");
+  c2.classList.add("hint-glow");
+
+  setTimeout(() => {
+    c1.classList.remove("hint-glow");
+    c2.classList.remove("hint-glow");
+  }, 1400);
+}
+
+$("joker-peek").onclick = usePeekJoker;
+$("joker-hint").onclick = useHintJoker;
+
+// BÖLÜM BİTİRME
+function finishLevel() {
+  clearInterval(timer);
+  sound.win();
+  launchConfetti();
+
+  const elapsedSecs = gameMode === "timed" ? (totalTimeTarget - timeLeft) : Math.max(1, Math.floor((Date.now() - t0) / 1000));
+  const ratio = moves / totalPairs;
+  
+  let s = 1;
+  if (ratio <= 1.45) s = 3;
+  else if (ratio <= 2.2) s = 2;
+
+  const basePts = totalPairs * 120;
+  const timeBonus = Math.max(0, (totalPairs * 15 - elapsedSecs) * 10);
+  const moveBonus = Math.max(0, (totalPairs * 3 - moves) * 25);
+  const roundScore = basePts + timeBonus + moveBonus;
+
+  if (isDailyActive) {
+    const today = getTodayKey();
+    localStorage.setItem("kart_daily_" + today, "1");
+    let streak = parseInt(localStorage.getItem("kart_daily_streak") || "0", 10);
+    const lastDate = localStorage.getItem("kart_daily_last_date");
+    if (lastDate !== today) {
+      streak += 1;
+      localStorage.setItem("kart_daily_streak", streak);
+      localStorage.setItem("kart_daily_last_date", today);
+    }
+
+    $("win-title").textContent = "🏆 Günlük Meydan Okuma Tamamlandı!";
+    $("win-desc").textContent = `Bugünkü bulmacayı çözdün! 🔥 Günlük Seri: ${streak} Gün!`;
+    $("win-next-btn").textContent = "Bölümlere Dön";
+  } else {
+    stars[level] = Math.max(stars[level] || 0, s);
+    scores[level] = Math.max(scores[level] || 0, roundScore);
+
+    if (level < MAX_LEVEL) {
+      unlocked = Math.max(unlocked, level + 1);
+    }
+    saveProgress();
+
+    const isFinal = level === MAX_LEVEL;
+    $("win-title").textContent = isFinal ? "🏆 OYUN BİTTİ! TEBRİKLER!" : `Bölüm ${level} Tamamlandı! 🎉`;
+    $("win-desc").textContent = isFinal 
+      ? "100 bölümün tamamını ustalıkla bitirdin! Muazzam bir hafıza performansı!" 
+      : `Harika bir hafıza! Sonraki bölüm seni bekliyor.`;
+    $("win-next-btn").textContent = "Sonraki Bölüm";
+    $("win-next-btn").style.display = isFinal ? "none" : "";
+  }
+
+  $("w-moves").textContent = moves;
+  $("w-time").textContent = fmtTime(elapsedSecs);
+  $("w-score").textContent = roundScore;
+  $("win-stars").textContent = "★".repeat(s) + "☆".repeat(3 - s);
+
+  $("win-modal").classList.add("show");
+}
+
+// --- 100 BÖLÜM MENÜSÜ & DÜNYA SEKMELERİ ---
+function buildLevelModal() {
+  let earnedStars = 0;
+  for (let i = 1; i <= MAX_LEVEL; i++) earnedStars += (stars[i] || 0);
+  $("total-stars-badge").textContent = `⭐ ${earnedStars}/${MAX_LEVEL * 3}`;
+
+  const tabsContainer = $("world-tabs");
+  tabsContainer.innerHTML = "";
+  WORLDS.forEach(w => {
+    const btn = document.createElement("button");
+    btn.className = "tab-btn" + (w.id === currentWorldTab ? " active" : "");
+    btn.innerHTML = `${w.icon} D${w.id}`;
+    btn.onclick = () => {
+      currentWorldTab = w.id;
+      buildLevelModal();
+    };
+    tabsContainer.appendChild(btn);
+  });
+
+  const grid = $("levels-grid");
+  grid.innerHTML = "";
+  const startLvl = (currentWorldTab - 1) * 10 + 1;
+  const endLvl = currentWorldTab * 10;
+
+  for (let i = startLvl; i <= endLvl; i++) {
+    const btn = document.createElement("button");
+    btn.className = "lvl-btn";
+    if (i === level && !isDailyActive) btn.classList.add("cur");
+    btn.disabled = i > unlocked;
+
+    const starCount = stars[i] || 0;
+    const starHtml = i > unlocked ? "🔒" : (starCount > 0 ? "★".repeat(starCount) : "·");
+    btn.innerHTML = `<span>${i}</span><span class="lvl-stars">${starHtml}</span>`;
+    btn.onclick = () => {
+      $("level-modal").classList.remove("show");
+      startLevel(i, false);
+    };
+    grid.appendChild(btn);
+  }
+}
+
+// --- TEMA SEÇİCİ MENÜSÜ ---
+function buildThemeModal() {
+  const grid = $("theme-grid");
+  grid.innerHTML = "";
+  THEMES.forEach(t => {
+    const card = document.createElement("div");
+    card.className = "theme-card" + (t.id === currentThemeId ? " active" : "");
+    card.innerHTML = `
+      <div class="theme-preview" style="background: radial-gradient(circle at 35% 25%, ${t.c2}, ${t.c1})"></div>
+      <b style="font-size:0.8rem">${t.name}</b>
+    `;
+    card.onclick = () => {
+      applyTheme(t.id);
+      buildThemeModal();
+    };
+    grid.appendChild(card);
+  });
+}
+
+// --- GÜNLÜK MEYDAN OKUMA MODALI ---
+function openDailyModal() {
+  const today = getTodayKey();
+  const months = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+  const d = new Date();
+  const dateStr = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+  $("daily-date-str").textContent = dateStr;
+
+  const isDone = localStorage.getItem("kart_daily_" + today) === "1";
+  const streak = parseInt(localStorage.getItem("kart_daily_streak") || "0", 10);
+  
+  $("daily-status-badge").textContent = isDone ? "TAMAMLANDI ✓" : "YENİ";
+  $("daily-status-badge").style.background = isDone ? "var(--ok)" : "var(--accent)";
+  $("daily-status-badge").style.color = isDone ? "#fff" : "#000";
+  $("daily-streak-text").textContent = `🔥 Günlük Seri: ${streak} Gün`;
+  $("daily-info-text").textContent = isDone 
+    ? "Tebrikler! Bugünün mücadelesini zaten tamamladın. İstersen tekrar oynayabilirsin." 
+    : "Bugüne özel hazırlanan kart dizilimi! Bakalım tek seferde kaç hamlede bitireceksin?";
+  $("start-daily-btn").textContent = isDone ? "Tekrar Oyna 🔁" : "Meydan Oku 🚀";
+
+  $("daily-modal").classList.add("show");
+}
+
+// --- CANVAS KONFETİ ---
+function launchConfetti() {
+  const canvas = $("confetti-canvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const particles = [];
+  const colors = ["#e0a526", "#2f9e6b", "#16808a", "#e04f4f", "#9c27b0", "#ff9800"];
+  for (let i = 0; i < 70; i++) {
+    particles.push({
+      x: canvas.width / 2,
+      y: canvas.height * 0.4,
+      vx: (Math.random() - 0.5) * 12,
+      vy: (Math.random() - 0.8) * 14,
+      size: Math.random() * 8 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      alpha: 1,
+      rotation: Math.random() * 360,
+      dRotation: (Math.random() - 0.5) * 10
+    });
+  }
+
+  let frame = 0;
+  function render() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.38;
+      p.alpha -= 0.015;
+      p.rotation += p.dRotation;
+      if (p.alpha > 0) {
+        alive = true;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+        ctx.restore();
+      }
+    });
+    frame++;
+    if (alive && frame < 90) requestAnimationFrame(render);
+    else ctx.clearRect(0, 0, canvas.width, canvas.height);
+  }
+  requestAnimationFrame(render);
+}
+
+// --- MOD SEÇİCİ ---
+function setGameMode(mode) {
+  gameMode = mode;
+  localStorage.setItem("kart_mod", mode);
+  $("mode-relaxed").classList.toggle("active", mode === "relaxed");
+  $("mode-timed").classList.toggle("active", mode === "timed");
+  startLevel(level, isDailyActive);
+}
+$("mode-relaxed").onclick = () => setGameMode("relaxed");
+$("mode-timed").onclick = () => setGameMode("timed");
+setGameMode(gameMode);
+
+// --- BUTON DİNLEYİCİLERİ ---
+$("sound-btn").textContent = sound.enabled ? "🔊" : "🔇";
+$("sound-btn").onclick = () => {
+  const on = sound.toggle();
+  $("sound-btn").textContent = on ? "🔊" : "🔇";
+};
+
+$("haptic-btn").textContent = sound.haptic ? "📳" : "📴";
+$("haptic-btn").onclick = () => {
+  const on = sound.toggleHaptic();
+  $("haptic-btn").textContent = on ? "📳" : "📴";
+};
+
+$("daily-btn").onclick = openDailyModal;
+$("close-daily-btn").onclick = () => $("daily-modal").classList.remove("show");
+$("start-daily-btn").onclick = () => {
+  $("daily-modal").classList.remove("show");
+  startLevel(1, true);
+};
+
+$("theme-btn").onclick = () => {
+  buildThemeModal();
+  $("theme-modal").classList.add("show");
+};
+$("close-theme-btn").onclick = () => $("theme-modal").classList.remove("show");
+
+$("restart-btn").onclick = () => startLevel(level, isDailyActive);
+$("win-again-btn").onclick = () => {
+  $("win-modal").classList.remove("show");
+  startLevel(level, isDailyActive);
+};
+$("win-next-btn").onclick = () => {
+  $("win-modal").classList.remove("show");
+  if (isDailyActive) {
+    startLevel(level, false);
+  } else {
+    startLevel(level + 1, false);
+  }
+};
+
+$("timeout-retry-btn").onclick = () => {
+  $("timeout-modal").classList.remove("show");
+  startLevel(level, isDailyActive);
+};
+$("timeout-switch-mode").onclick = () => {
+  $("timeout-modal").classList.remove("show");
+  setGameMode("relaxed");
+};
+
+$("menu-btn").onclick = $("levels-modal-btn").onclick = () => {
+  currentWorldTab = Math.min(Math.floor((level - 1) / 10) + 1, 10);
+  buildLevelModal();
+  $("level-modal").classList.add("show");
+};
+
+$("close-modal-btn").onclick = () => $("level-modal").classList.remove("show");
+
+$("reset-prog-btn").onclick = () => {
+  if (confirm("Tüm 100 bölümdeki ilerleme ve yıldızlar silinsin mi?")) {
+    unlocked = 1;
+    stars = {};
+    scores = {};
+    saveProgress();
+    $("level-modal").classList.remove("show");
+    startLevel(1, false);
+  }
+};
+
+window.addEventListener("resize", () => {
+  const cfg = getLevelConfig(level);
+  layoutBoard(cfg.cols, cfg.rows);
+});
+</script>
+</body>
+</html>

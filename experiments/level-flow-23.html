@@ -1,0 +1,164 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111d36"><title>Kart Eşleştirme | 23 Bölüm Pilot</title><style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#f7f8ff;background:#0b1429}button{font:inherit;cursor:pointer;touch-action:manipulation}#app{min-height:100dvh;max-width:520px;margin:auto;background:radial-gradient(ellipse at 45% 5%,#344981 0,transparent 55%),linear-gradient(#12233c,#0a1223);padding:max(env(safe-area-inset-top),18px) 16px max(env(safe-area-inset-bottom),24px);display:flex;flex-direction:column;gap:14px}.top{display:flex;align-items:center;justify-content:space-between}.eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;color:#a6b9de;font-weight:800}h1{font-size:1.45rem;line-height:1.2;margin:4px 0 0}.sub{color:#b8c8e8;font-size:.89rem;line-height:1.45;margin:0}.pill{border-radius:99px;background:#ffffff17;border:1px solid #ffffff29;padding:8px 12px;font-size:.72rem;color:#d7e3fb;white-space:nowrap}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.tab{border:1px solid #ffffff30;background:#ffffff0d;color:#b9c9e5;border-radius:13px;padding:11px 4px;font-size:.78rem;font-weight:800;min-height:51px}.tab.active{background:#ffcc72;color:#22263f;border-color:#ffe3a5}.panel{border:1px solid #ffffff24;border-radius:21px;background:#ffffff0b;padding:14px;box-shadow:0 8px 30px #0002}.name{font-size:1.1rem;font-weight:900;margin-bottom:5px}.desc{color:#c0cbe2;font-size:.82rem;line-height:1.5;min-height:42px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#080f2366;padding:9px 5px;border-radius:12px;text-align:center}.stat b{display:block;font-variant-numeric:tabular-nums;font-size:1.15rem}.stat span{display:block;font-size:.65rem;color:#a9b8d6;margin-top:2px}.board-wrap{position:relative;flex:1;min-height:320px;background:radial-gradient(circle,#35507a55,transparent 65%),#070f1d88;border:1px solid #ffffff1e;border-radius:22px;display:flex;align-items:center;justify-content:center;padding:12px}.board{display:grid;grid-template-columns:repeat(var(--columns),minmax(0,1fr));gap:8px;width:100%;max-width:380px}.cell{aspect-ratio:1;min-width:0}.card{display:block;width:100%;height:100%;position:relative;border:0;border-radius:13px;background:linear-gradient(145deg,#5c9da2,#25616c);box-shadow:inset 0 2px #ffffff83,0 5px 0 #0a3746,0 8px 12px #0004;color:#c2e6d9;font-size:clamp(23px,7vw,42px);font-weight:800;transition:transform .18s,background .18s}.card::after{content:"◆";position:absolute;inset:0;display:grid;place-items:center;color:#d5ef9c;text-shadow:0 0 15px #d9ff7a;pointer-events:none}.card.open,.card.matched{background:linear-gradient(145deg,#fffaf0,#cbd7f1);box-shadow:0 3px 0 #7894ba,0 5px 12px #0004;transform:translateY(2px);color:#172943}.card.open::after,.card.matched::after{content:none}.card.matched{opacity:.42;pointer-events:none}.hole{width:100%;height:100%;border-radius:11px;border:1px dashed #90abd055;background:#0715258a}.preview{position:absolute;z-index:5;top:12px;left:12px;right:12px;text-align:center;padding:8px;background:#f7ce76;color:#22263a;font-weight:900;border-radius:11px;box-shadow:0 4px 20px #0005}.hidden{display:none!important}.actions{display:flex;gap:9px}.primary,.secondary{border:0;border-radius:14px;min-height:50px;padding:12px 18px;font-weight:900}.primary{background:linear-gradient(#ffdf92,#ffbc52);color:#263047;flex:1;box-shadow:0 4px 0 #815c28}.secondary{background:#ffffff1b;color:#f9fbff;border:1px solid #ffffff2a}.result{border-radius:15px;background:#3bd3a921;border:1px solid #70e8b060;padding:12px;color:#d1ffec;font-weight:750;font-size:.88rem}footer{color:#9aaed2;font-size:.72rem;line-height:1.4;text-align:center}@media(max-height:720px){#app{gap:9px;padding-top:9px}.board-wrap{min-height:270px}.panel{padding:10px}.stats{margin-top:7px}.desc{min-height:0}.board{max-width:335px;gap:6px}}@media(max-width:350px){#app{padding-left:9px;padding-right:9px}.tab{font-size:.7rem;padding:8px 2px}.board{gap:6px}.card{border-radius:10px}}
+.card.frozen{filter:grayscale(.4) brightness(.72);border:3px solid #97dfff;box-shadow:inset 0 0 19px #a0deff77,0 4px 0 #2467a2;cursor:not-allowed}.card.frozen::after{content:"❄";color:#dcf7ff;text-shadow:0 0 14px #90e6ff;font-size:1.65rem}.card.frozen:hover{transform:none}
+.card{transform-style:preserve-3d;backface-visibility:hidden;transition:transform .24s cubic-bezier(.2,.8,.2,1),background .24s,opacity .24s}
+.card.open{animation:flipIn .29s ease-out}.card.bad{animation:badMove .3s ease}
+.card.hit{animation:hitGlow .42s ease}.card.matched{transition:opacity .4s,transform .3s;transform:scale(.94)}
+.card.spawn{animation:spawnCard .38s cubic-bezier(.16,1.3,.4,1) both}
+.card.thaw{animation:iceThaw .55s ease-out}
+@keyframes flipIn{0%{transform:rotateY(88deg) scale(.93)}100%{transform:rotateY(0) scale(1)}}
+@keyframes badMove{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@keyframes hitGlow{35%{transform:scale(1.08);box-shadow:0 0 0 3px #79e9b5,0 0 25px #79e9b5}}
+@keyframes spawnCard{0%{opacity:0;transform:translateY(22px) scale(.86)}100%{opacity:1;transform:none}}
+@keyframes iceThaw{30%{filter:brightness(1.8);transform:scale(1.08)}100%{filter:none;transform:none}}
+#board{max-width:340px}
+#board[data-shape="true"]{max-width:370px}
+.level-nav{display:flex;align-items:center;justify-content:space-between;gap:9px}
+.level-arrow{background:#ffffff17;border:1px solid #ffffff29;color:white;border-radius:11px;padding:10px 14px;min-width:45px}
+.level-title{font-size:.9rem;font-weight:800;text-align:center}
+.tag{color:#ffda8d;font-size:.72rem;font-weight:800;letter-spacing:.08em}
+.result{line-height:1.45}
+@media(prefers-reduced-motion:reduce){.card,.card.open,.card.hit,.card.bad,.card.spawn,.card.thaw{animation:none!important;transition:none!important}}
+
+.card{background:transparent!important;box-shadow:none!important;perspective:750px;transform:none!important;overflow:visible}
+.card::after{display:none!important;content:none!important}
+.card-inner{display:block;width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .38s cubic-bezier(.22,.73,.22,1)}
+.card.open .card-inner,.card.matched .card-inner{transform:rotateY(180deg)}
+.card-front,.card-back{display:grid;place-items:center;position:absolute;inset:0;border-radius:13px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.card-back{background:linear-gradient(145deg,#5c9da2,#25616c);border:2px solid #b5e0ce;box-shadow:inset 0 2px #ffffff83,0 5px 0 #0a3746,0 8px 12px #0004}
+.card-back::after{content:"◆";color:#d5ef9c;font-size:clamp(24px,6vw,41px);text-shadow:0 0 15px #d9ff7a}
+.card-front{transform:rotateY(180deg);background:linear-gradient(145deg,#fffaf0,#cbd7f1);color:#172943;border:2px solid #a4bbce;font-size:clamp(26px,7vw,45px);box-shadow:0 4px 0 #7894ba,0 7px 12px #0003}
+.card.bad .card-inner{animation:shake3d .3s ease}
+.card.hit .card-front{animation:matchedGlow .5s ease}
+.card.matched{opacity:.48}
+.card.frozen .card-back{background:linear-gradient(145deg,#a5ebfa,#396e97);border:3px solid #d6f7ff;box-shadow:inset 0 0 17px #ffffffbd,0 4px 0 #175477}
+.card.frozen .card-back::after{content:"❄";font-size:1.8rem;color:#eefbff;text-shadow:0 0 12px #a0e7ff}
+.card.thaw .card-back{animation:iceThaw .65s ease-out}
+@keyframes shake3d{0%,100%{translate:0}25%{translate:-4px}75%{translate:4px}}
+@keyframes matchedGlow{40%{box-shadow:0 0 0 4px #72eabd,0 0 26px #47eac7;scale:1.06}}
+@media(prefers-reduced-motion:reduce){.card-inner,.card.spawn,.card.bad .card-inner,.card.hit .card-front,.card.thaw .card-back{transition:none!important;animation:none!important}}
+</style></head><body>
+<main id="app"><div class="top"><div><div class="eyebrow">Bölüm akışı · Pilot 2</div><h1>Hafıza Macerası</h1></div><span class="pill">Ana oyundan ayrı</span></div>
+<div class="level-nav"><button id="previous" class="level-arrow" aria-label="Önceki bölüm">‹</button><span id="level-label" class="level-title"></span><button id="next" class="level-arrow" aria-label="Sonraki bölüm">›</button></div>
+<section class="panel"><div class="tag" id="mode-tag"></div><div class="name" id="mode-name"></div><div class="desc" id="mode-desc"></div><div class="stats"><div class="stat"><b id="pairs"></b><span>Çift</span></div><div class="stat"><b id="moves"></b><span>Hamle</span></div><div class="stat"><b id="time"></b><span>Süre</span></div></div></section>
+<div class="board-wrap"><div class="preview hidden" id="preview-text" aria-live="polite"></div><div class="board" id="board" aria-label="Eşleştirme tahtası"></div></div>
+<div id="result" class="result hidden" role="status"></div>
+<div class="actions"><button class="secondary" id="restart">↻ Yeniden</button><button class="primary" id="next">Sonraki Bölüm →</button></div>
+<footer>Bu 23 bölümlük deney ana oyun ilerlemesini değiştirmez. A: sonraki bölüm · S: başa dön.</footer>
+</main><script>
+"use strict";
+const $=id=>document.getElementById(id);
+const em=["🍎","🍓","🍋","🥝","🍊","🍇","🥑","🍉","🍒","🍌","🍍","🫐","🍐","🥭"];
+// Curated 18-level pilot: classic is the foundation; specials are interleaved.
+const plan=[
+["classic",2],["classic",3],["classic",4],["classic",5],["classic",6],
+["classic",6],["classic",7],["preview",6],["classic",8],["shape",6],["classic",8],
+["budget",6],["classic",9],["ice",6],["classic",9],["waves",6],["preview",8],
+["classic",10],["shape",8],["budget",8],["ice",8],["waves",8],["classic",10]];
+const names={classic:"Klasik Eşleştirme",preview:"Ön İzleme",shape:"Şekilli Tahta",budget:"Hamle Ustalığı",ice:"Buz Kırıcı",waves:"Kart Dalgaları"};
+const descriptions={
+ classic:"Kartları çevir ve tüm çiftleri bul. Temel hafıza mücadelesi.",
+ preview:"Kartlar önce kısa süre açık. Yerlerini hatırla, ardından çiftleri bul.",
+ shape:"Boşlukların oluşturduğu farklı haritada çiftleri bul.",
+ budget:"Tüm çiftleri bul, az hamleyle bitirirsen altın madalya kazan. Limit geçilse de bölüm devam eder.",
+ ice:"Buzlu çiftler kilitli. Normal bir çift bulduğunda bir buz çifti çözülür.",
+ waves:"İlk üç çift görünür. Bunları tamamlayınca kalan çiftler gelir."
+};
+let levelIndex=0, token=0, deck=[], cards=[], first=null, blocked=false, found=0,moves=0,clock=null,startTime=0,seconds=0, pending=[],frozenSymbols=[],nextWave=[],waveAdded=false,completed=false;
+const active=()=>({type:plan[levelIndex][0],pairs:plan[levelIndex][1]});
+function schedule(callback,delay){const id=setTimeout(callback,delay);pending.push(id)}
+function cancel(){clearInterval(clock);pending.forEach(clearTimeout);pending=[];clock=null}
+function shuffle(list){let a=list.slice();for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function format(t){return Math.floor(t/60)+":"+String(t%60).padStart(2,"0")}
+function update(){
+ $("pairs").textContent=found+"/"+active().pairs;
+ $("moves").textContent=moves;
+ $("time").textContent=format(seconds);
+ $("level-label").textContent="Bölüm "+(levelIndex+1)+" / "+plan.length";
+ $("previous").disabled=levelIndex===0;
+ $("next").textContent=levelIndex===plan.length-1?"İlk Bölüme Dön ↺":"Sonraki Bölüm →";
+}
+function clockStart(){if(startTime)return;startTime=Date.now();clock=setInterval(()=>{seconds=Math.floor((Date.now()-startTime)/1000);update()},350)}
+function show(c){c.btn.classList.add("open");c.btn.querySelector(".card-front").textContent=c.emoji;c.btn.setAttribute("aria-label",c.emoji)}
+function hide(c){if(c.matched)return;c.btn.classList.remove("open","bad");c.btn.setAttribute("aria-label","Kapalı kart")}
+function makeCard(emoji,frozen=false,delay=0){
+ const btn=document.createElement("button");btn.className="card spawn";btn.type="button";btn.setAttribute("aria-label",frozen?"Buzlu kart":"Kapalı kart");btn.style.animationDelay=delay+"ms";btn.innerHTML='<span class="card-inner"><span class="card-back"></span><span class="card-front"></span></span>';
+ const cell=document.createElement("div");cell.className="cell";cell.append(btn);$("board").append(cell);
+ const c={emoji,btn,matched:false,frozen};cards.push(c);
+ if(frozen)btn.classList.add("frozen");
+ btn.onclick=()=>flip(c,token);
+ return c;
+}
+function ensurePairs(symbols){const counts=new Map();symbols.forEach(x=>counts.set(x,(counts.get(x)||0)+1));if(counts.size!==active().pairs||[...counts.values()].some(x=>x!==2))throw Error("Geçersiz deste: her sembol tam iki kez bulunmalı")}
+function render(){
+ cancel();token++;const current=token;
+ const {type,pairs}=active();first=null;blocked=false;found=0;moves=0;startTime=0;seconds=0;cards=[];frozenSymbols=[];nextWave=[];waveAdded=false;completed=false;
+ $("result").classList.add("hidden");$("preview-text").classList.add("hidden");$("mode-name").textContent=names[type];
+ $("mode-desc").textContent=descriptions[type];
+ $("mode-tag").textContent=type==="classic"?"KLASİK":"ÖZEL BÖLÜM";
+ const cols=type==="shape"?4:(pairs<=3?2:(pairs>=9?4:3));
+ const board=$("board");board.replaceChildren();board.style.setProperty("--columns",cols);board.dataset.shape=String(type==="shape");
+ const unique=shuffle(em).slice(0,pairs);if(unique.length!==pairs||new Set(unique).size!==pairs)throw Error("Emoji havuzu yetersiz");
+ deck=shuffle([...unique,...unique]);ensurePairs(deck);
+ if(type==="ice") frozenSymbols=unique.slice(0,Math.min(2,pairs-1));
+ if(type==="waves"){
+   const firstSet=new Set(unique.slice(0,3));nextWave=deck.filter(e=>!firstSet.has(e));
+   shuffle(deck.filter(e=>firstSet.has(e))).forEach((e,i)=>makeCard(e,false,i*45));
+ }else if(type==="shape"){
+   const total=cols*Math.ceil((pairs*2+4)/cols);const holes=4;
+   const possible=Array.from({length:total},(_,i)=>i);
+   const holeSet=new Set(shuffle(possible.filter(i=>i!==0&&i!==total-1)).slice(0,total-deck.length));
+   let j=0;
+   for(let i=0;i<total;i++){if(holeSet.has(i)){const cell=document.createElement("div");cell.className="cell";cell.innerHTML='<div class="hole" aria-hidden="true"></div>';board.append(cell)}else makeCard(deck[j++],false,i*20)}
+ }else deck.forEach((e,i)=>makeCard(e,frozenSymbols.includes(e),i*25));
+ update();
+ if(type==="preview"){
+ blocked=true;cards.forEach(show);$("preview-text").classList.remove("hidden");
+ let remaining=levelIndex>=16?2:3;
+ const tick=()=>{if(current!==token)return;$("preview-text").textContent="Hatırla · "+remaining; if(remaining-- >0)schedule(tick,1000);else{cards.forEach(hide);$("preview-text").classList.add("hidden");blocked=false}};
+ tick();
+ }
+}
+function thaw(){
+ const frozen=cards.find(c=>c.frozen);if(!frozen)return;
+ cards.filter(c=>c.frozen&&c.emoji===frozen.emoji).forEach(c=>{c.frozen=false;c.btn.classList.remove("frozen");c.btn.classList.add("thaw");c.btn.setAttribute("aria-label","Kapalı kart")})
+}
+function spawnWave(current){
+ if(waveAdded)return;waveAdded=true;blocked=true;const note=$("preview-text");note.textContent="Yeni kartlar geliyor!";note.classList.remove("hidden");
+ schedule(()=>{if(current!==token)return;shuffle(nextWave).forEach((e,i)=>makeCard(e,false,i*80));note.classList.add("hidden");blocked=false},680)
+}
+function success(){
+ completed=true;cancel();seconds=startTime?Math.floor((Date.now()-startTime)/1000):0;
+ const {type,pairs}=active();const gold=Math.ceil(pairs*1.8);
+ const award=type==="budget"?(moves<=gold?"🏆 Altın hedef tamam! ":"⭐ Bölüm tamamlandı. Altın hedef kaçtı. "):"🎉 ";
+ $("result").textContent=award+" "+moves+" hamle · "+format(seconds)+" süre. Bölüm "+(levelIndex+1)+" tamamlandı!";
+ $("result").classList.remove("hidden");update();
+}
+function flip(c,current){
+ if(current!==token||blocked||completed||c.matched||c.frozen||c===first||c.btn.classList.contains("open"))return;
+ clockStart();show(c);
+ if(!first){first=c;return}
+ moves++;const a=first;first=null;blocked=true;
+ if(a.emoji===c.emoji){
+  a.matched=c.matched=true;a.btn.classList.add("hit");c.btn.classList.add("hit");
+  schedule(()=>{if(current!==token)return;
+   a.btn.classList.remove("hit");c.btn.classList.remove("hit");
+   a.btn.classList.add("matched");c.btn.classList.add("matched");found++;
+   if(active().type==="ice")thaw();
+   update();
+   if(found===active().pairs){success();return}
+   if(active().type==="waves"&&found===3){spawnWave(current);return}
+   blocked=false;
+  },380);
+ }else{
+  a.btn.classList.add("bad");c.btn.classList.add("bad");
+  schedule(()=>{if(current!==token)return;hide(a);hide(c);blocked=false},790);
+ }
+ update();
+}
+$("previous").onclick=()=>{if(levelIndex>0){levelIndex--;render()}};
+$("next").onclick=()=>{levelIndex=(levelIndex+1)%plan.length;render()};
+$("restart").onclick=render;
+document.addEventListener("keydown",e=>{if(e.repeat||e.ctrlKey||e.altKey||e.metaKey)return;if(e.key.toLowerCase()==="a")$("next").click();if(e.key.toLowerCase()==="s"){levelIndex=0;render()}});
+render();
+</script></body></html>

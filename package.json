@@ -8,7 +8,7 @@
     "android:sync": "npm run android:prepare && npx cap sync android",
     "android:open": "npx cap open android",
     "android:apk": "npm run android:sync && node scripts/build-debug-apk.mjs",
-    "test:core": "node tests/level-core.test.cjs && node tests/session.test.cjs && node tests/level-100.test.cjs"
+    "test:core": "node tests/level-core.test.cjs && node tests/session.test.cjs && node tests/level-100.test.cjs && node tests/level-100-playthrough.test.cjs"
   },
   "dependencies": {
     "@capacitor/core": "^7.0.0",

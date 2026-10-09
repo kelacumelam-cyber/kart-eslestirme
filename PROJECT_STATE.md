@@ -175,3 +175,10 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Android paketleyici `scripts/prepare-android-test.mjs` artık `game-100.html` + iki modülü `www/` içine çevrimdışı kopyalıyor. Kurulu Capacitor Android klasörünü tekrar oluşturmadan `npm.cmd run android:apk` ile güncel APK üretilebilir.
 - `tests/level-100.test.cjs` eklendi, 100 bölüm × 20 karıştırma = 2000 deste kontrolü geçti. 100/100 bölüm için mock-DOM başlangıç ve kart adedi kontrolü geçti. **Gerçek 100 bölüm uçtan uca oynanış testi ve yeni APK derlemesi/telefon testi henüz yapılmadı.**
 - Özellikle ilerleme kaydı, bölüm kilidi, ilk uygulama açılışı, Android üst durum çubuğu güvenli alanı ve özel mekaniklerin gerçek cihazda çalışması için kullanıcının APK test sonucu bekleniyor.
+
+## Ana oyun görsel iyileştirme V2 (2026-10-09)
+- Kullanıcı kapsamı sınırladı: yalnızca mevcut ana oyunun arka planı/dünya atmosferi ve butonları daha modern mobil oyun hissine taşınacak; oyun akışına dokunulmayacak.
+- `index.html` içinde yalnızca CSS eklenerek mevcut dünya değişkenlerini kullanan çok katmanlı arka plan, hafif atmosferik parıltı, cam panel etkisi, altın ana ve mavi ikincil butonlar, basılma geri bildirimi eklendi.
+- JavaScript blokları eski içerikle karşılaştırıldı ve **değişmedi**.
+- Commit: `a52383be03ec754e80dbb086f4655b61ff9e85f9`.
+- **Henüz gerçek mobil tarayıcı/Android görsel kabul testi yok.** Yeni arayüzün görsel etkisini görmek için GitHub Pages ana oyunda test edilebilir. Bu commit 100 bölümlük bağımsız `game-100.html` tasarımını değiştirmez.

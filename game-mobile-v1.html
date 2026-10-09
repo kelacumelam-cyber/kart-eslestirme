@@ -217,8 +217,47 @@ button:disabled{opacity:.45;cursor:default}
 .result{border-color:var(--world-accent);box-shadow:0 0 18px #ffcc6833}
 .result.win-pop{animation:none}
 @media(prefers-reduced-motion:reduce){#fireworks{display:none}}
+
+/* Standalone, atmospheric home; the existing level board is unchanged. */
+.home-screen,.settings-screen{max-width:520px;margin:0 auto;min-height:100dvh;padding:max(28px,env(safe-area-inset-top)) 24px max(35px,env(safe-area-inset-bottom));color:#fff;display:flex;flex-direction:column;position:relative;overflow:hidden;background:radial-gradient(ellipse at 49% 33%,#437d74a6 0,transparent 51%),radial-gradient(ellipse at 28% 2%,#5a4eb16e 0,transparent 50%),linear-gradient(155deg,#152c4c 2%,#0b3241 54%,#081623 100%);}
+.home-screen::before,.settings-screen::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 18% 14%,#fff5 0 2px,transparent 3px),radial-gradient(circle at 79% 23%,#ffdb7588 0 2px,transparent 3px),radial-gradient(circle at 63% 65%,#fff4 0 1px,transparent 3px),radial-gradient(circle at 38% 81%,#fff3 0 1px,transparent 3px);background-size:160px 175px;opacity:.7}
+.home-stars{font-size:2rem;letter-spacing:1.3rem;color:#f7d883;text-align:center;opacity:.7}
+.home-brand{flex:1;min-height:0;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;text-align:center;gap:10px}
+.home-kicker{font-size:.75rem;letter-spacing:.18em;color:#b7eae3;font-weight:850}
+.home-brand h1{font-size:clamp(2.7rem,12vw,4.3rem);line-height:.96;color:#ffe3a2;text-shadow:0 4px 0 #644e49,0 10px 28px #0009;letter-spacing:-.05em}
+.home-brand h1 em{font-style:normal;color:#a1f3cf}
+.home-brand p{font-weight:750;color:#c1e9e9;font-size:.95rem}
+.home-art{height:230px;width:min(290px,80vw);position:relative;filter:drop-shadow(0 25px 27px #0008);margin:25px auto}
+.home-card{position:absolute;width:155px;height:196px;border-radius:25px;border:6px solid #ffdfa0;display:grid;place-items:center;font-size:6rem;box-shadow:inset 0 0 0 3px #ffffff55,0 14px 30px #0006}
+.home-card.back{left:30px;top:20px;transform:rotate(-18deg);background:linear-gradient(135deg,#5d5596,#163c75);color:#ffe595}
+.home-card.front{left:100px;top:6px;transform:rotate(14deg);background:linear-gradient(150deg,#ffd48f,#e47c54)}
+.home-controls{position:relative;display:grid;gap:12px;padding-bottom:8px}
+.home-controls button{min-height:56px;border-radius:19px;font-weight:900;font-size:1.1rem}
+.home-progress{text-align:center;color:#c9ebf0;font-weight:700;font-size:.87rem}
+.settings-screen{justify-content:center}
+.settings-panel{position:relative;padding:26px 20px;border:1px solid #ffffff43;background:#102a3bcf;border-radius:26px;box-shadow:0 20px 80px #0007}
+.settings-panel h2{font-size:1.75rem;margin:20px 0 25px}
+.settings-back{min-height:40px;padding:8px 18px;border-radius:13px}
+.setting-row{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:18px 0;border-bottom:1px solid #ffffff24;font-size:.98rem;font-weight:700}
+.setting-row input{width:24px;height:24px;accent-color:#71e3bd}
+.setting-note{color:#c0dbe1;font-size:.82rem;line-height:1.5;margin-top:23px}
+.settings-save-note{color:#efce79;font-size:.78rem;margin-top:15px}
+.game-concealed{display:none!important}.hidden{display:none!important}
+.home-back{background:#ffffff19;color:#fff;border:1px solid #ffffff40;border-radius:12px;padding:6px 12px;margin-right:10px;font-size:1.2rem}
+#app .top{justify-content:flex-start}
+@media(max-height:690px){.home-art{height:155px;margin:8px auto}.home-card{transform:scale(.72)!important;transform-origin:top left}.home-brand{gap:4px}.home-brand h1{font-size:2.7rem}}
 </style></head><body>
-<main id="app"><div class="top"><div><div class="eyebrow">10 Dünya · 100 Bölüm</div><h1>Hafıza Macerası</h1></div></div>
+<div id="home" class="home-screen">
+ <div class="home-stars" aria-hidden="true">✦　✧　　 ✦</div>
+ <div class="home-brand"><span class="home-kicker">10 DÜNYA · 100 BÖLÜM</span><h1>Hafıza<br><em>Macerası</em></h1><div class="home-art" aria-hidden="true"><span class="home-card back">✦</span><span class="home-card front">🦊</span></div><p>Her kartta yeni bir keşif!</p></div>
+ <div class="home-controls"><div id="home-progress" class="home-progress"></div><button class="primary home-play" id="play-game">▶ Oyuna Başla</button><button class="secondary home-settings" id="open-settings">⚙ Ayarlar</button></div>
+ </div>
+ <section id="settings-screen" class="settings-screen hidden" aria-label="Oyun ayarları"><div class="settings-panel"><button id="close-settings" class="secondary settings-back">← Geri</button><h2>⚙ Ayarlar</h2>
+ <label class="setting-row"><span>🔔 Zafer sesi</span><input id="setting-sound" type="checkbox" checked></label>
+ <label class="setting-row"><span>📳 Hatalı eşleşmede titreşim</span><input id="setting-vibration" type="checkbox" checked></label>
+ <p class="setting-note">Ayarların bu cihazda saklanır. Titreşim, cihazın ve tarayıcının desteklemesine bağlıdır.</p>
+ <div class="settings-save-note" id="settings-save-note">Otomatik kaydedilir.</div></div></section>
+ <main id="app" class="game-concealed"><div class="top"><button id="go-home" class="home-back" aria-label="Ana menüye dön">⌂</button><div><div class="eyebrow">10 Dünya · 100 Bölüm</div><h1>Hafıza Macerası</h1></div></div>
 <div class="level-nav"><button id="previous" class="level-arrow" aria-label="Önceki bölüm">‹</button><div class="level-center"><span id="level-label" class="level-title"></span><div class="world-progress" aria-hidden="true"><span id="world-progress-fill"></span></div></div><span class="level-arrow-spacer" aria-hidden="true"></span></div>
 <section class="panel"><div class="tag" id="mode-tag"></div><div class="name" id="mode-name"></div><div class="desc" id="mode-desc"></div><div class="stats"><div class="stat"><b id="pairs"></b><span>Çift</span></div><div class="stat"><b id="moves"></b><span>Hamle</span></div><div class="stat"><b id="time"></b><span>Süre</span></div></div></section>
 <div class="board-wrap"><canvas id="fireworks" aria-hidden="true"></canvas><div class="preview hidden" id="preview-text" aria-live="polite"></div><div class="board" id="board" aria-label="Eşleştirme tahtası"></div></div>
@@ -235,6 +274,15 @@ const LABELS={classic:"Klasik Eşleştirme",preview:"Ön İzleme",shape:"Şekill
 const DESCS={classic:"Kartları çevir ve çiftlerini bul.",preview:"Kartları kısa sürede hatırla, kapandıktan sonra eşleştir.",shape:"Boşluklu tahtada konumları hatırla.",budget:"Az hamleye çalış; hedefi aşınca oyun bitmez.",ice:"Eşleştirdikçe buzlu çiftler açılır.",waves:"İlk üç çiftten sonra yeni kart dalgası açılır."};
 const SAVE_KEY="kart_eslestirme_100_v1";
 function readUnlock(){try{const n=Number(localStorage.getItem(SAVE_KEY));return Number.isInteger(n)?Math.min(100,Math.max(1,n)):1}catch{return 1}}
+const SETTINGS_KEY="kart_eslestirme_settings_v1";
+function readSettings(){try{const x=JSON.parse(localStorage.getItem(SETTINGS_KEY)||"{}");return {sound:x.sound!==false,vibration:x.vibration!==false}}catch{return {sound:true,vibration:true}}}
+const gameSettings=readSettings();
+function writeSettings(){try{localStorage.setItem(SETTINGS_KEY,JSON.stringify(gameSettings))}catch{}}
+function homeProgress(){$("home-progress").textContent=unlocked>=GAME.COUNT?"100. bölüme ulaştın!":"Kaldığın bölüm: "+unlocked+" / "+GAME.COUNT}
+function showHome(){stopFireworks();clearAsync();serial++;$("app").classList.add("game-concealed");$("settings-screen").classList.add("hidden");$("home").classList.remove("hidden");homeProgress()}
+function showGame(){$("home").classList.add("hidden");$("settings-screen").classList.add("hidden");$("app").classList.remove("game-concealed");render()}
+function showSettings(){$("home").classList.add("hidden");$("settings-screen").classList.remove("hidden");$("setting-sound").checked=gameSettings.sound;$("setting-vibration").checked=gameSettings.vibration}
+function wrongMatchVibration(){if(!gameSettings.vibration)return;try{if(typeof navigator!=="undefined"&&typeof navigator.vibrate==="function")navigator.vibrate(90)}catch{}}
 let unlocked=readUnlock(),levelIndex=unlocked-1,session=null, deck=[], tiles=[], serial=0, timers=[], clock=null, started=0, elapsed=0, firstCard=null;
 function persist(){try{localStorage.setItem(SAVE_KEY,String(unlocked))}catch{}}
 function saveFinalCompletion(){try{localStorage.setItem(SAVE_KEY+"_completed","1")}catch{}}
@@ -269,6 +317,7 @@ function primeFireworksAudio(){
  }catch{}
 }
 function celebrationSound(){
+ if(!gameSettings.sound)return;
  try{
   if(!fireworksAudio)return;
   if(fireworksAudio.state==="suspended")fireworksAudio.resume().catch(()=>{});
@@ -391,7 +440,7 @@ function flip(tile){
  const previous=firstCard;firstCard=null;
  if(!previous)throw Error("Missing first card");
  if(response.event==="match-pending"){previous.button.classList.add("hit");tile.button.classList.add("hit")}
- else {previous.button.classList.add("bad");tile.button.classList.add("bad")}
+ else {previous.button.classList.add("bad");tile.button.classList.add("bad");wrongMatchVibration()}
  update();
  const generation=response.state.generation;
  later(()=>{
@@ -424,6 +473,11 @@ $("previous").onclick=()=>{if(levelIndex>0){levelIndex--;render()}};
 
 $("advance").onclick=()=>{if(levelIndex+2<=unlocked&&levelIndex+1<GAME.COUNT){levelIndex++;render()}};
 $("restart").onclick=render;
-
-render();
+$("go-home").onclick=showHome;
+$("play-game").onclick=showGame;
+$("open-settings").onclick=showSettings;
+$("close-settings").onclick=()=>{$("settings-screen").classList.add("hidden");$("home").classList.remove("hidden");homeProgress()};
+$("setting-sound").onchange=()=>{gameSettings.sound=$("setting-sound").checked;writeSettings()};
+$("setting-vibration").onchange=()=>{gameSettings.vibration=$("setting-vibration").checked;writeSettings()};
+render();showHome();
 </script></body></html>

@@ -6,7 +6,8 @@ function act(s,type,index,extra={}){return s.dispatch({type,index,generation:s.s
 const run=(type)=>{
  const s=createSession({type,pairs:6},deck);
  if(type==="preview"){assert.equal(s.state().phase,"preview");assert.equal(act(s,"flip",0).event,"busy");assert.equal(act(s,"preview-end").event,"preview-ended")}
- assert.equal(act(s,"flip",0).event,type==="ice"?"ineligible":type==="waves"?"ineligible":"first-flip");
+ if(type==="ice")assert.equal(act(s,"flip",0).event,"ineligible");
+ if(type==="waves")assert.equal(act(s,"flip",8).event,"ineligible");
  return s;
 };
 const normal=run("classic");

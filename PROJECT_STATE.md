@@ -231,3 +231,12 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Kontrol mock DOM ve sahte zamanlayıcıyla kod düzeyinde yürütüldü: **3/3 PASS**. Henüz gerçek mobil dokunmatik ve Android APK doğrulaması değil.
 - Commit: test `35f07de0d8b08642759e26f6ef8d04029d70385a`, test entegrasyonu `e764f17d1b0177850fce3d824a19c9d1eafb3113`.
 - Ürün davranışı değiştirilmedi. Son büyük kalan eşik: Windows üzerinde güncel mobil oyundan Android APK derlemek ve Galaxy M12 gibi gerçek cihazda görsel/ses/oynanış kabulünü yapmak.
+
+## Mobil uygulama girişi, ayarlar ve ikon (2026-10-09)
+- `game-mobile-v1.html` içinde ayrı gece/ışıltı temalı giriş ekranı, Oyuna Başla, Ayarlar, oyun içinden ana menüye dönüş eklendi.
+- Ses ve hatalı eşleşmede 90ms titreşim seçenekleri bağımsızdır. `kart_eslestirme_settings_v1` içinde ayarlar saklanır; cihaz `navigator.vibrate` desteklemiyorsa titreşim gerçekleşmeyebilir.
+- Var olan kayıt anahtarı `kart_eslestirme_100_v1` ve final `_completed` korunur; silinmedi/format değiştirilmedi. Yerel kayıt, bulut eşitleme değildir.
+- Android launcher için `assets/android-launcher-fox.xml` ile özel tilki/kart vector/adaptive icon; `scripts/prepare-android-test.mjs` hazırlıkta Android res klasörüne kopyalar. `capacitor.config.json` appName = Hafıza Macerası; applicationId korunur.
+- Sahte DOM UI başlangıç kontrolü: kayıtlı 7. seviyeye dönme, giriş/ayarlar açma, titreşim ayarını saklama, ana menüye dönüş: **PASS**. Oyun inline JS sözdizimi: PASS.
+- **Gerçek Android APK derleme, adaptif ikon görüntüsü, haptik ve ses cihaz kabulü henüz yapılmadı.**
+- Kod commitleri: giriş+ayarlar `5bbcd7e`, ikon `ac37241`, native ikon montaj `3f28520`, native isim `10d4f5f`.

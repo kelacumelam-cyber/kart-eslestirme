@@ -102,3 +102,10 @@ Durum: yalnız hedef kaydı, oyun kodu değiştirilmedi.
 - Kullanıcıya web denemesi teslim edildi. **Tarayıcıda/gerçek Android'de fiili kabul ve kare hızı henüz doğrulanmadı.**
 - Ana oyun `index.html` değiştirilmedi; eski laboratuvar sayfaları korundu.
 - Bir sonraki karar: kullanıcının oynanış ve animasyon hissiyatı geri bildirimine göre düzeltme, sonra ana oyuna kademeli geçiş.
+
+## 23 bölüm öğretici + mekanik pilot (2026-10-09)
+
+- `experiments/level-flow-23.html`: ilk 5 öğretici bölüm (2,3,4,5,6 çift); sonraki 18 bölüm daha önce onaylanan pilot sırasıyla devam eder.
+- Kartlar iki ayrı yüzü olan 3D dönüş yapısına dönüştürüldü; doğru/yanlış, buz, dalga animasyonları için CSS kuralları eklendi.
+- Oyuncunun ana oyun kayıtları değişmez. 18 bölümlük önceki pilot ve orijinal oyun korunmuştur.
+- Statik içerik/bağlantı kontrolleri geçti; tarayıcıda ve gerçek Android cihazda animasyon/oynanış testi bekleniyor. Geri bildirim gelmeden ana oyuna aktarma yapılmayacak.

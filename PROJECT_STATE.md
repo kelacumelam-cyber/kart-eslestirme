@@ -139,3 +139,12 @@ Durum: yalnız hedef kaydı, oyun kodu değiştirilmedi.
 - Sonraki mühendislik hedefi: özel mekaniklerin saf mantığını ayırmak, durum/zamanlayıcı/regresyon testleri ve kontrollü Android tarayıcı kabulü.
 
 Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
+
+## Saf oturum durumu ve mekanik regresyonları (2026-10-09)
+
+- `src/level-core.js` içinde izole `createSession(level,deck)` eklendi: dönemeçler `flip`, `settle`, `preview-end`, `restart`; `generation` ile eski bölüm/asenkron geri çağrıların reddi, eşleşme/hamle durumu ve buz/dalga açılmaları için saf geçiş mantığı.
+- Eşleşmenin doğruluğu `settle` mesajının dışarıdan verdiği bayrakla değil içerideki bekleyen hamleyle belirleniyor.
+- `tests/session.test.cjs` eklendi; klasik, ön izleme, hamle, buz ve dalga durumları, sahte settle, erken dokunuş, restart sonrası bayat callback kontrolleri geçmiştir (JS test uygulaması ile).
+- Commit'ler: çekirdek `16efb2f`, settle koruması `da7bd8d`, test son düzeltmesi `27cadd0`.
+- **Sınır:** Bu yalnızca yeniden kullanılabilir saf durum modülü; 23 bölümlük oynanabilir pilotun animasyon UI bağlantısı henüz buna geçirilmedi. Gerçek tarayıcı/cihaz testi yapılmadı.
+- Sonraki adım: sahne adaptörü bağlarken callback nesillerini sınamak, ardından gerçek cihazda kabul testi.

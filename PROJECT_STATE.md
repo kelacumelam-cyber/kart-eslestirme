@@ -240,3 +240,10 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Sahte DOM UI başlangıç kontrolü: kayıtlı 7. seviyeye dönme, giriş/ayarlar açma, titreşim ayarını saklama, ana menüye dönüş: **PASS**. Oyun inline JS sözdizimi: PASS.
 - **Gerçek Android APK derleme, adaptif ikon görüntüsü, haptik ve ses cihaz kabulü henüz yapılmadı.**
 - Kod commitleri: giriş+ayarlar `5bbcd7e`, ikon `ac37241`, native ikon montaj `3f28520`, native isim `10d4f5f`.
+
+## İlk kurulum ve düşük güçlü Android hazırlığı (2026-10-09)
+- `game-mobile-v1.html`: Oyuna Başla yazısı altın tonuna (`#ffd86f`) ayarlandı. Kayıt yoksa (`localStorage.getItem(...)===null`) **kesinlikle 1. bölüm** açılır; mevcut kayıtlardaki ilerleme aynen korunur. Tarayıcıda 6/100 görülmesi tarayıcı test kaydından kaynaklanabilir, taze Android uygulama verisiyle aynı şey değildir.
+- 4 veya daha az çekirdek / 4 GB veya daha az RAM bildirilen cihazlarda kutlama parçacıkları patlama başına 25→12 düşürülüp efekt 1,8→1,35 saniyeye kısaltılır. Ses kapalıysa AudioContext gereksiz hazırlanmaz. İlerleme kayıt anahtarı, mekanikler ve görsel tema korunur.
+- `scripts/prepare-android-test.mjs` içindeki adaptive-icon XML satır sonu kaçışları düzeltildi; dosyanın üretilebilecek XML metni artık gerçek satır sonları içerir.
+- Kod JS sözdizimi ve UI yarış testi (3/3) tekrar geçti; **gerçek eski Android cihaz performans/çökme ve APK build doğrulaması henüz yapılmadı**.
+- Commitler: oyun `57c9c9f`; native ikon XML `489a47e`. APK güncellemesi kullanıcı isteğine uygun olarak en son yapılacak.

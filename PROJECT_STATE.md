@@ -118,3 +118,13 @@ Durum: yalnız hedef kaydı, oyun kodu değiştirilmedi.
 - JavaScript sözdizimi kontrolü başarılı. **Gerçek tarayıcı/telefon uçtan uca test yapılmadı; sonucu kesin sürüm kabulü olarak görme.**
 - Ana oyun düzeltme commit'i: `18edf8d6d10a3ec1771680ef139446ebea6f768a`.
 - Bir sonraki küçük adım: beğenilen altı karakteri yapılandırılabilir/ölçeklenebilir kurala çevirmek; orijinal oyun ilerlemesi korunarak aşamalı taşıma. Önce 23 bölümün gerçek cihaz kabulünü doğrula.
+
+## Bölüm motoru ayrıştırma — prototip (2026-10-09)
+
+- `experiments/level-flow-data-v1.html` oluşturuldu (commit `cd2ce32cfac2aa85c3308dce96dc3b63344a94fb`).
+- Oyuncunun beğendiği 23 bölümün sırası ve mevcut oynanışı korunarak bölümler v1 şemalı kayıtlar hâline getirildi: sabit kimlik, tür, çift adedi, hedef, zorluk bandı, seed.
+- Tanım doğrulayıcısı 23 bölümün bütünlüğünü, benzersiz kimlikleri, izin verilen altı arketipi ve öğretici sırasını kontrol ediyor.
+- Kod sözdizimi, 23 tanım ve sahte DOM'da 1. bölümün dört kartla başlaması kontrol edildi; geçti.
+- Mevcut onaylı `experiments/level-flow-23.html` ve ana `index.html` değiştirilmedi.
+- **Gerçek tarayıcı/telefon testi ve tam mekanik davranış doğrulaması henüz yok.** Seed kaydı, gelecekte deterministik tahta üretimini mümkün kılacak şema alanıdır; mevcut pilotun karıştırma işlemi hâlâ rastgele yapılmaktadır.
+- Sonraki adım: konfigürasyon ve oyun mekaniği kodunu daha temiz modüllere ayırmak, kapsamlı davranış testleri ve küçük cihaz kabulünden sonra ana oyuna aktarmak.

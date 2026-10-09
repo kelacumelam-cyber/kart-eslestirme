@@ -182,3 +182,10 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - JavaScript blokları eski içerikle karşılaştırıldı ve **değişmedi**.
 - Commit: `a52383be03ec754e80dbb086f4655b61ff9e85f9`.
 - **Henüz gerçek mobil tarayıcı/Android görsel kabul testi yok.** Yeni arayüzün görsel etkisini görmek için GitHub Pages ana oyunda test edilebilir. Bu commit 100 bölümlük bağımsız `game-100.html` tasarımını değiştirmez.
+
+## Mobil görünüm montajı V1 (2026-10-09)
+- `game-mobile-v1.html` oluşturuldu: **bizim** `game-100.html` motorunu, 100 seviyeyi, 6 mekaniği, ilerleme kaydını ve animasyonları temel alır. Claude kaynaklı ana oyun bölüm kodu kullanılmadı.
+- Önceden onaylanan ana oyun CSS iyileştirmesinin yalnızca görsel atmosfer ve buton fikri uyarlandı. 10 dünya için farklı tema değişkenleri, daha katmanlı arka plan ve altın/mavi mobil butonlar eklendi.
+- Oyun JavaScript'i ile karşılaştırmada yalnızca dünya temasını ayarlayan **bir satır** değişti; oyun mantığı korunuyor. JS sözdizimi geçti.
+- Henüz mobil tarayıcı/Android görüntü kabulü yok. Bu ayrı dosya, orijinal `index.html`, `game-100.html` ve paketleyici aynı şekilde korunuyor. APK paketleyici hâlâ `game-100.html` hedefler; kullanıcı görsel sürümü onaylamadan paketleme hedefi değiştirilmez.
+- Görsel checkpoint: `6ced2efc9544f57417e072912fc3199f76a6c03e`.

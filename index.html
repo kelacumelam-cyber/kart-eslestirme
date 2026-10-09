@@ -679,6 +679,7 @@ function applyWorldScene(cfg){
 const MAX_LEVEL = 100;
 const $ = id => document.getElementById(id);
 
+let navigationOrigin="home", pausedAt=0;
 let level = 1, unlocked = 1, stars = {}, scores = {};
 let firstCard = null, pendingMismatch = null, isLocked = false;
 let moves = 0, found = 0, totalPairs = 2, combo = 1;
@@ -1243,7 +1244,7 @@ $("mode-timed").onclick = () => setGameMode("timed");
 setGameMode(gameMode);
 $("home-modal").classList.add("show");
 
-let navigationOrigin="home",pausedAt=0;
+
 function closeMenus(){["home-modal","pause-modal","settings-modal"].forEach(id=>$(id).classList.remove("show"))}
 function pauseClock(){if(!pausedAt)pausedAt=Date.now();clearInterval(timer);timer=null}
 function resumeClock(){if(pausedAt&&started)t0+=Date.now()-pausedAt;pausedAt=0;if(started&&found<totalPairs)runTimer()}

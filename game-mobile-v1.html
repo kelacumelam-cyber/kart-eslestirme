@@ -1,0 +1,336 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111d36"><title>Kart Eşleştirme | Mobil Oyun V1</title><style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#f7f8ff;background:#0b1429}button{font:inherit;cursor:pointer;touch-action:manipulation}#app{min-height:100dvh;max-width:520px;margin:auto;background:radial-gradient(ellipse at 45% 5%,#344981 0,transparent 55%),linear-gradient(#12233c,#0a1223);padding:max(env(safe-area-inset-top),18px) 16px max(env(safe-area-inset-bottom),24px);display:flex;flex-direction:column;gap:14px}.top{display:flex;align-items:center;justify-content:space-between}.eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;color:#a6b9de;font-weight:800}h1{font-size:1.45rem;line-height:1.2;margin:4px 0 0}.sub{color:#b8c8e8;font-size:.89rem;line-height:1.45;margin:0}.pill{border-radius:99px;background:#ffffff17;border:1px solid #ffffff29;padding:8px 12px;font-size:.72rem;color:#d7e3fb;white-space:nowrap}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.tab{border:1px solid #ffffff30;background:#ffffff0d;color:#b9c9e5;border-radius:13px;padding:11px 4px;font-size:.78rem;font-weight:800;min-height:51px}.tab.active{background:#ffcc72;color:#22263f;border-color:#ffe3a5}.panel{border:1px solid #ffffff24;border-radius:21px;background:#ffffff0b;padding:14px;box-shadow:0 8px 30px #0002}.name{font-size:1.1rem;font-weight:900;margin-bottom:5px}.desc{color:#c0cbe2;font-size:.82rem;line-height:1.5;min-height:42px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#080f2366;padding:9px 5px;border-radius:12px;text-align:center}.stat b{display:block;font-variant-numeric:tabular-nums;font-size:1.15rem}.stat span{display:block;font-size:.65rem;color:#a9b8d6;margin-top:2px}.board-wrap{position:relative;flex:1;min-height:320px;background:radial-gradient(circle,#35507a55,transparent 65%),#070f1d88;border:1px solid #ffffff1e;border-radius:22px;display:flex;align-items:center;justify-content:center;padding:12px}.board{display:grid;grid-template-columns:repeat(var(--columns),minmax(0,1fr));gap:8px;width:100%;max-width:380px}.cell{aspect-ratio:1;min-width:0}.card{display:block;width:100%;height:100%;position:relative;border:0;border-radius:13px;background:linear-gradient(145deg,#5c9da2,#25616c);box-shadow:inset 0 2px #ffffff83,0 5px 0 #0a3746,0 8px 12px #0004;color:#c2e6d9;font-size:clamp(23px,7vw,42px);font-weight:800;transition:transform .18s,background .18s}.card::after{content:"◆";position:absolute;inset:0;display:grid;place-items:center;color:#d5ef9c;text-shadow:0 0 15px #d9ff7a;pointer-events:none}.card.open,.card.matched{background:linear-gradient(145deg,#fffaf0,#cbd7f1);box-shadow:0 3px 0 #7894ba,0 5px 12px #0004;transform:translateY(2px);color:#172943}.card.open::after,.card.matched::after{content:none}.card.matched{opacity:.42;pointer-events:none}.hole{width:100%;height:100%;border-radius:11px;border:1px dashed #90abd055;background:#0715258a}.preview{position:absolute;z-index:5;top:12px;left:12px;right:12px;text-align:center;padding:8px;background:#f7ce76;color:#22263a;font-weight:900;border-radius:11px;box-shadow:0 4px 20px #0005}.hidden{display:none!important}.actions{display:flex;gap:9px}.primary,.secondary{border:0;border-radius:14px;min-height:50px;padding:12px 18px;font-weight:900}.primary{background:linear-gradient(#ffdf92,#ffbc52);color:#263047;flex:1;box-shadow:0 4px 0 #815c28}.secondary{background:#ffffff1b;color:#f9fbff;border:1px solid #ffffff2a}.result{border-radius:15px;background:#3bd3a921;border:1px solid #70e8b060;padding:12px;color:#d1ffec;font-weight:750;font-size:.88rem}footer{color:#9aaed2;font-size:.72rem;line-height:1.4;text-align:center}@media(max-height:720px){#app{gap:9px;padding-top:9px}.board-wrap{min-height:270px}.panel{padding:10px}.stats{margin-top:7px}.desc{min-height:0}.board{max-width:335px;gap:6px}}@media(max-width:350px){#app{padding-left:9px;padding-right:9px}.tab{font-size:.7rem;padding:8px 2px}.board{gap:6px}.card{border-radius:10px}}
+.card.frozen{filter:grayscale(.4) brightness(.72);border:3px solid #97dfff;box-shadow:inset 0 0 19px #a0deff77,0 4px 0 #2467a2;cursor:not-allowed}.card.frozen::after{content:"❄";color:#dcf7ff;text-shadow:0 0 14px #90e6ff;font-size:1.65rem}.card.frozen:hover{transform:none}
+.card{transform-style:preserve-3d;backface-visibility:hidden;transition:transform .24s cubic-bezier(.2,.8,.2,1),background .24s,opacity .24s}
+.card.open{animation:flipIn .29s ease-out}.card.bad{animation:badMove .3s ease}
+.card.hit{animation:hitGlow .42s ease}.card.matched{transition:opacity .4s,transform .3s;transform:scale(.94)}
+.card.spawn{animation:spawnCard .38s cubic-bezier(.16,1.3,.4,1) both}
+.card.thaw{animation:iceThaw .55s ease-out}
+@keyframes flipIn{0%{transform:rotateY(88deg) scale(.93)}100%{transform:rotateY(0) scale(1)}}
+@keyframes badMove{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+@keyframes hitGlow{35%{transform:scale(1.08);box-shadow:0 0 0 3px #79e9b5,0 0 25px #79e9b5}}
+@keyframes spawnCard{0%{opacity:0;transform:translateY(22px) scale(.86)}100%{opacity:1;transform:none}}
+@keyframes iceThaw{30%{filter:brightness(1.8);transform:scale(1.08)}100%{filter:none;transform:none}}
+#board{max-width:340px}
+#board[data-shape="true"]{max-width:370px}
+.level-nav{display:flex;align-items:center;justify-content:space-between;gap:9px}
+.level-arrow{background:#ffffff17;border:1px solid #ffffff29;color:white;border-radius:11px;padding:10px 14px;min-width:45px}
+.level-title{font-size:.9rem;font-weight:800;text-align:center}
+.tag{color:#ffda8d;font-size:.72rem;font-weight:800;letter-spacing:.08em}
+.result{line-height:1.45}
+@media(prefers-reduced-motion:reduce){.card,.card.open,.card.hit,.card.bad,.card.spawn,.card.thaw{animation:none!important;transition:none!important}}
+
+.card{background:transparent!important;box-shadow:none!important;perspective:750px;transform:none!important;overflow:visible}
+.card::after{display:none!important;content:none!important}
+.card-inner{display:block;width:100%;height:100%;position:relative;transform-style:preserve-3d;transition:transform .38s cubic-bezier(.22,.73,.22,1)}
+.card.open .card-inner,.card.matched .card-inner{transform:rotateY(180deg)}
+.card-front,.card-back{display:grid;place-items:center;position:absolute;inset:0;border-radius:13px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.card-back{background:linear-gradient(145deg,#5c9da2,#25616c);border:2px solid #b5e0ce;box-shadow:inset 0 2px #ffffff83,0 5px 0 #0a3746,0 8px 12px #0004}
+.card-back::after{content:"◆";color:#d5ef9c;font-size:clamp(24px,6vw,41px);text-shadow:0 0 15px #d9ff7a}
+.card-front{transform:rotateY(180deg);background:linear-gradient(145deg,#fffaf0,#cbd7f1);color:#172943;border:2px solid #a4bbce;font-size:clamp(26px,7vw,45px);box-shadow:0 4px 0 #7894ba,0 7px 12px #0003}
+.card.bad .card-inner{animation:shake3d .3s ease}
+.card.hit .card-front{animation:matchedGlow .5s ease}
+.card.matched{opacity:.48}
+.card.frozen .card-back{background:linear-gradient(145deg,#a5ebfa,#396e97);border:3px solid #d6f7ff;box-shadow:inset 0 0 17px #ffffffbd,0 4px 0 #175477}
+.card.frozen .card-back::after{content:"❄";font-size:1.8rem;color:#eefbff;text-shadow:0 0 12px #a0e7ff}
+.card.thaw .card-back{animation:iceThaw .65s ease-out}
+@keyframes shake3d{0%,100%{translate:0}25%{translate:-4px}75%{translate:4px}}
+@keyframes matchedGlow{40%{box-shadow:0 0 0 4px #72eabd,0 0 26px #47eac7;scale:1.06}}
+@media(prefers-reduced-motion:reduce){.card-inner,.card.spawn,.card.bad .card-inner,.card.hit .card-front,.card.thaw .card-back{transition:none!important;animation:none!important}}
+
+/* Matched-pair feedback: preserve the board positions, then fade completed cards. */
+.card.matched{opacity:.28!important;pointer-events:none;filter:saturate(.48);transition:opacity .55s ease,filter .55s ease!important}
+.card.matched .card-inner{transform:rotateY(180deg) scale(.94);transition:transform .38s cubic-bezier(.22,.73,.22,1)}
+@media(prefers-reduced-motion:reduce){.card.matched,.card.matched .card-inner{transition:none!important}}
+
+.card.wave-hidden{visibility:hidden;pointer-events:none}
+.card.frozen .card-back{background:linear-gradient(145deg,#a5ebfa,#396e97);border:3px solid #d6f7ff}
+.card.frozen .card-back::after{content:"❄";color:#eefbff}
+.card.matched{opacity:.28!important;filter:saturate(.48);pointer-events:none;transition:opacity .55s ease!important}
+.card.matched .card-inner{transform:rotateY(180deg) scale(.94)}
+.card{background:transparent!important;box-shadow:none!important;perspective:750px;transform:none!important}
+.card::after{display:none!important}
+.card-inner{display:block;position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .38s cubic-bezier(.22,.73,.22,1)}
+.card.open .card-inner,.card.matched .card-inner{transform:rotateY(180deg)}
+.card-front,.card-back{display:grid;place-items:center;position:absolute;inset:0;border-radius:13px;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+.card-back{background:linear-gradient(145deg,#5c9da2,#25616c);border:2px solid #b5e0ce;box-shadow:0 5px 0 #0a3746}
+.card-back::after{content:"◆";font-size:clamp(25px,7vw,42px);color:#d5ef9c}
+.card-front{transform:rotateY(180deg);background:linear-gradient(145deg,#fffaf0,#cbd7f1);font-size:clamp(25px,7vw,44px)}
+.card.bad .card-inner{animation:shake3d .3s ease}
+.card.hit .card-front{animation:matchedGlow .5s ease}
+@keyframes shake3d{0%,100%{translate:0}25%{translate:-4px}75%{translate:4px}}
+@keyframes matchedGlow{40%{box-shadow:0 0 0 4px #72eabd,0 0 26px #47eac7;scale:1.06}}
+@media(prefers-reduced-motion:reduce){.card-inner,.card.bad .card-inner,.card.hit .card-front{transition:none!important;animation:none!important}}
+
+/* Mobile gameplay layout: fit board and controls inside the visual viewport. */
+@media (max-width:600px){
+ html,body{height:100%;overflow:hidden}
+ #app{height:100dvh;min-height:0;overflow:hidden;gap:7px;padding:8px 12px max(9px,env(safe-area-inset-bottom))}
+ .top{flex:0 0 auto;min-height:0}
+ .eyebrow{font-size:.59rem;letter-spacing:.09em}
+ h1{font-size:1.08rem;margin-top:2px}
+ .pill{font-size:.59rem;padding:5px 7px}
+ .level-nav{flex:0 0 auto;gap:5px}
+ .level-arrow{min-width:33px;padding:5px 8px}
+ .level-title{font-size:.75rem;white-space:nowrap}
+ .level-nav #next{font-size:.7rem;padding:6px 9px;min-height:35px}
+ .panel{flex:0 0 auto;padding:8px 10px;border-radius:14px}
+ .tag{font-size:.6rem}
+ .name{font-size:.91rem;margin-bottom:0}
+ .desc{min-height:0;font-size:.68rem;line-height:1.2}
+ .stats{margin-top:5px;gap:5px}
+ .stat{padding:3px 4px;border-radius:8px}
+ .stat b{font-size:.92rem}
+ .stat span{font-size:.56rem;margin-top:0}
+ .board-wrap{min-height:0;min-width:0;flex:1 1 0;padding:6px;border-radius:15px;overflow:hidden}
+ #board,#board[data-shape="true"]{width:min(100%,calc((100dvh - 280px) * var(--columns) / var(--rows)));max-width:100%;max-height:100%;gap:5px;align-content:center}
+ .cell{aspect-ratio:1}
+ .card-back,.card-front{border-radius:9px}
+ .actions{flex:0 0 auto;gap:7px}
+ .primary,.secondary{min-height:38px;padding:7px 9px;font-size:.8rem;border-radius:10px}
+ footer{display:none}
+ .result{flex:0 0 auto;padding:6px 8px;font-size:.72rem}
+}
+@media (max-width:600px) and (max-height:600px){
+ .desc,.pill{display:none}
+ #app{gap:4px}
+ .panel{padding:5px}
+ .stats{margin-top:3px}
+ #board,#board[data-shape="true"]{width:min(100%,calc((100dvh - 230px) * var(--columns) / var(--rows)))}
+}
+
+/* Standalone Android safe-area spacing and compact board alignment */
+@media(max-width:600px){#app{padding-top:max(34px,env(safe-area-inset-top))!important}.top{min-height:26px}.eyebrow{font-size:.6rem}.board-wrap{min-height:0!important}.card.matched{opacity:.28!important}}
+button:disabled{opacity:.45;cursor:default}
+
+/* Native-feel world palettes; decorative only. 100-level logic is unchanged. */
+#app{--world-accent:#ffcf72;--scene-glow:#6bc8b83a;--scene-top:#1a3f49;--scene-bottom:#081a2c;--glass:#143446b8;--scene-ink:#f5fbff;--scene-muted:#b9d4da;}
+#app[data-world="0"]{--world-accent:#caff8a;--scene-glow:#72e68d39;--scene-top:#234a39;--scene-bottom:#071d2a}
+#app[data-world="1"]{--world-accent:#ffbfdc;--scene-glow:#ec99de46;--scene-top:#47315c;--scene-bottom:#141a32}
+#app[data-world="2"]{--world-accent:#ffd37b;--scene-glow:#ffb76542;--scene-top:#523b2c;--scene-bottom:#142934}
+#app[data-world="3"]{--world-accent:#8beeff;--scene-glow:#4acbff4a;--scene-top:#15536b;--scene-bottom:#051b35}
+#app[data-world="4"]{--world-accent:#ffc899;--scene-glow:#ff985444;--scene-top:#593948;--scene-bottom:#211c34}
+#app[data-world="5"]{--world-accent:#c5f5b7;--scene-glow:#9de9bf3c;--scene-top:#315343;--scene-bottom:#102c32}
+#app[data-world="6"]{--world-accent:#e7b7ff;--scene-glow:#b387ff4d;--scene-top:#3b3267;--scene-bottom:#100f32}
+#app[data-world="7"]{--world-accent:#b5dbff;--scene-glow:#7bbdff47;--scene-top:#294969;--scene-bottom:#101e38}
+#app[data-world="8"]{--world-accent:#ffe18c;--scene-glow:#fbd27447;--scene-top:#55502f;--scene-bottom:#19263b}
+#app[data-world="9"]{--world-accent:#ffbaff;--scene-glow:#d57bea4b;--scene-top:#4d315c;--scene-bottom:#150f35}
+#app::before{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1}
+#app{isolation:isolate}
+
+/* Mobile atmosphere v2 — purely visual; gameplay and layout metrics unchanged. */
+#app{
+ background:
+   radial-gradient(ellipse 60% 31% at 15% 8%,color-mix(in srgb,var(--world-accent) 19%,transparent),transparent 75%),
+   radial-gradient(ellipse 70% 38% at 85% 76%,var(--scene-glow),transparent 80%),
+   radial-gradient(ellipse 90% 55% at 48% 32%,#ffffff0b,transparent 70%),
+   linear-gradient(160deg,var(--scene-top),var(--scene-bottom));
+}
+#app::before{
+ background-image:
+   radial-gradient(circle at 12% 22%,#ffffff40 1px,transparent 2px),
+   radial-gradient(circle at 79% 54%,var(--world-accent) 1px,transparent 3px),
+   radial-gradient(circle at 33% 80%,#ffffff27 1px,transparent 2px);
+ background-size:113px 147px,191px 173px,143px 199px;
+ opacity:.52;
+}
+.board-wrap{
+ background:
+   linear-gradient(150deg,#ffffff0c,#00000013 46%,#0000002a),
+   radial-gradient(ellipse at 50% 45%,var(--scene-glow),transparent 78%),
+   #061522a8;
+ border-color:#ffffff29;
+ box-shadow:inset 0 1px #ffffff2e,0 15px 35px #0005;
+}
+.top h1{
+ color:#fff9ed;
+ text-shadow:0 2px 10px #0006,0 0 15px color-mix(in srgb,var(--world-accent) 18%,transparent);
+}
+.pill,.stat,#mission-ribbon,.level-arrow,.secondary,.panel{
+ backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px);
+}
+.stat{background:linear-gradient(145deg,#ffffff14,#00000018),var(--glass);border-color:#ffffff26}
+.level-arrow,.secondary{
+ background:linear-gradient(155deg,#ffffff23,#ffffff05 56%,#00000019),var(--glass);
+ border:1px solid #ffffff40;
+ box-shadow:inset 0 1px #ffffff38,0 3px 0 #0005,0 7px 13px #0002;
+ transition:transform .14s ease,filter .14s ease,box-shadow .14s ease;
+}
+.level-arrow:active,.secondary:active{transform:translateY(2px) scale(.97);box-shadow:inset 0 1px #ffffff24,0 1px 0 #0005}
+.primary{
+ background:linear-gradient(180deg,#fff0b7 0%,var(--world-accent) 49%,#d68b23 100%);
+ border:1px solid #ffe6a97a;
+ color:#23283b;
+ box-shadow:inset 0 1px #fff9d7a8,0 4px 0 #815b28,0 7px 16px #0005;
+ text-shadow:0 1px #ffffff42;
+ transition:transform .14s ease,box-shadow .14s ease,filter .14s ease;
+}
+.primary:active{transform:translateY(3px);box-shadow:inset 0 1px #fff7d3a5,0 1px 0 #815b28,0 3px 9px #0004}
+.secondary{
+ background:linear-gradient(160deg,#315676b8,#102940ed);
+ border:1px solid #9dcaff6b;color:#f0f8ff;
+ box-shadow:inset 0 1px #ffffff46,0 4px 0 #061723,0 7px 15px #0004;
+ text-shadow:0 1px 4px #0005;
+}
+.secondary:active{box-shadow:inset 0 1px #ffffff2a,0 1px 0 #061723}
+.primary:focus-visible{
+ background:linear-gradient(180deg,#fff0b6,var(--world-accent));
+ color:#202c3a;box-shadow:inset 0 1px #ffffff8c,0 2px 5px #0004;
+}
+.panel{
+ box-shadow:inset 0 1px #ffffff1b,0 3px 9px #0002;
+}
+.result{
+ border:1px solid #ffffff39;
+ box-shadow:0 23px 65px #000a,inset 0 1px #ffffff1c;
+}
+@media(prefers-reduced-motion:reduce){.primary,.secondary{transition:none!important}}
+
+
+/* Preserve board dimensions and functional controls from the proven 100-level pilot. */
+.board-wrap{position:relative;min-height:0}
+.top{position:relative;z-index:1}
+.level-arrow,.primary,.secondary{touch-action:manipulation}
+.primary{background:linear-gradient(180deg,#fff0b7,var(--world-accent) 55%,#c9953a);color:#1e3040;border:1px solid #fff4c080}
+.secondary{background:linear-gradient(155deg,#355b78,#112c43);color:#eef8ff}
+.card-back{background:linear-gradient(145deg,#ffffff32,transparent 40%),linear-gradient(145deg,#479ba3,#174c62);border-color:#bce9dc}
+.card-back::after{color:var(--world-accent)}
+@media(prefers-reduced-motion:reduce){.primary,.secondary,.level-arrow{transition:none!important}}
+</style></head><body>
+<main id="app"><div class="top"><div><div class="eyebrow">10 Dünya · 100 Bölüm</div><h1>Hafıza Macerası</h1></div><span class="pill">Aile Sürümü</span></div>
+<div class="level-nav"><button id="previous" class="level-arrow" aria-label="Önceki bölüm">‹</button><span id="level-label" class="level-title"></span><button id="next" class="level-arrow" aria-label="Sonraki bölüm">›</button></div>
+<section class="panel"><div class="tag" id="mode-tag"></div><div class="name" id="mode-name"></div><div class="desc" id="mode-desc"></div><div class="stats"><div class="stat"><b id="pairs"></b><span>Çift</span></div><div class="stat"><b id="moves"></b><span>Hamle</span></div><div class="stat"><b id="time"></b><span>Süre</span></div></div></section>
+<div class="board-wrap"><div class="preview hidden" id="preview-text" aria-live="polite"></div><div class="board" id="board" aria-label="Eşleştirme tahtası"></div></div>
+<div id="result" class="result hidden" role="status"></div>
+<div class="actions"><button class="secondary" id="restart">↻ Yeniden</button><button class="primary" id="advance">Sonraki Bölüm →</button></div>
+<footer>100 bölüm · İlerlemen bu telefona kaydedilir. İnternetsiz oynanabilir.</footer>
+</main><script src="../src/level-core.js"></script><script src="../src/level-100.js"></script><script>
+"use strict";
+const $=id=>document.getElementById(id);
+const CORE=KartLevelCore;
+const GAME=Kart100;
+const SYMBOLS=["🍎","🍓","🍋","🥝","🍊","🍇","🥑","🍉","🍒","🍌","🍍","🫐","🍐","🥭"];
+const LABELS={classic:"Klasik Eşleştirme",preview:"Ön İzleme",shape:"Şekilli Tahta",budget:"Hamle Ustalığı",ice:"Buz Kırıcı",waves:"Kart Dalgaları"};
+const DESCS={classic:"Kartları çevir ve çiftlerini bul.",preview:"Kartları kısa sürede hatırla, kapandıktan sonra eşleştir.",shape:"Boşluklu tahtada konumları hatırla.",budget:"Az hamleye çalış; hedefi aşınca oyun bitmez.",ice:"Eşleştirdikçe buzlu çiftler açılır.",waves:"İlk üç çiftten sonra yeni kart dalgası açılır."};
+const SAVE_KEY="kart_eslestirme_100_v1";
+function readUnlock(){try{const n=Number(localStorage.getItem(SAVE_KEY));return Number.isInteger(n)?Math.min(100,Math.max(1,n)):1}catch{return 1}}
+let unlocked=readUnlock(),levelIndex=unlocked-1,session=null, deck=[], tiles=[], serial=0, timers=[], clock=null, started=0, elapsed=0, firstCard=null;
+function persist(){try{localStorage.setItem(SAVE_KEY,String(unlocked))}catch{}}
+function clearAsync(){timers.forEach(clearTimeout);timers=[];clearInterval(clock);clock=null}
+function later(fn,ms){const token=serial;const id=setTimeout(()=>{if(serial===token)fn()},ms);timers.push(id)}
+function format(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function update(){
+ const state=session.state();
+ $("level-label").textContent="Bölüm "+(levelIndex+1)+" / "+GAME.LEVELS.length;
+ $("pairs").textContent=state.matchedPairs+"/"+GAME.LEVELS[levelIndex].pairs;
+ $("moves").textContent=String(state.moves);$("time").textContent=format(elapsed);
+ $("previous").disabled=levelIndex===0;
+ const canAdvance=levelIndex+2<=unlocked&&levelIndex+1<GAME.COUNT;
+ $("next").disabled=!canAdvance;
+ $("next").textContent=levelIndex===GAME.COUNT-1?"100 Bölüm Tamam!":"Sonraki Bölüm →";
+ $("advance").disabled=!canAdvance;
+ $("advance").textContent=levelIndex===GAME.COUNT-1?"100 Bölüm Tamam!":"Sonraki Bölüm →";
+}
+function startClock(){if(started)return;started=Date.now();clock=setInterval(()=>{elapsed=Math.floor((Date.now()-started)/1000);update()},400)}
+function flipFace(tile,on){tile.button.classList.toggle("open",on);tile.button.setAttribute("aria-label",on?tile.emoji:"Kapalı kart")}
+function matchVisual(a,b){for(const t of [a,b]){t.button.classList.remove("hit","bad");t.button.classList.add("matched");flipFace(t,true)}}
+function syncLocks(){
+ const state=session.state(), frozen=new Set(state.frozenSymbols);
+ tiles.forEach(t=>{
+   const hidden=GAME.LEVELS[levelIndex].type==="waves" && state.visiblePairs<GAME.LEVELS[levelIndex].pairs && t.waveHidden;
+   t.button.classList.toggle("frozen",frozen.has(t.emoji));
+   t.button.classList.toggle("wave-hidden",hidden);
+   t.button.disabled=hidden||frozen.has(t.emoji)||t.button.classList.contains("matched");
+ });
+}
+function tileFor(emoji,index,hidden=false){
+ const cell=document.createElement("div");cell.className="cell";
+ const b=document.createElement("button");b.type="button";b.className="card spawn";b.innerHTML='<span class="card-inner"><span class="card-back"></span><span class="card-front"></span></span>';
+ b.querySelector(".card-front").textContent=emoji;
+ b.style.animationDelay=(index%8)*32+"ms";
+ cell.appendChild(b);
+ const t={emoji,index,button:b,waveHidden:hidden};tiles.push(t);
+ b.onclick=()=>flip(t);
+ return cell;
+}
+function render(){
+ clearAsync();serial++;started=0;elapsed=0;firstCard=null;tiles=[];
+ const level=GAME.LEVELS[levelIndex], type=level.type;
+ deck=CORE.uniquePairDeck(GAME.WORLDS[level.world].emojis,level.pairs);
+ session=CORE.createSession(level,deck);
+ const cols=type==="shape"?4:level.pairs<=3?2:level.pairs>=9?4:3;
+ const board=$("board");board.replaceChildren();board.style.setProperty("--columns",cols);board.style.setProperty("--rows",Math.ceil((level.pairs*2+(type==="shape"?4:0))/cols));board.dataset.shape=String(type==="shape");
+ const world=GAME.WORLDS[level.world];
+ $("mode-name").textContent=LABELS[type];$("mode-desc").textContent=DESCS[type];
+ $("mode-tag").textContent=world.icon+" "+world.name+" · "+(type==="classic"?"KLASİK":"ÖZEL");
+ document.getElementById("app").dataset.world=String(level.world);
+ $("result").classList.add("hidden");$("preview-text").classList.add("hidden");
+ const waveHidden=new Set(type==="waves"?[...new Set(deck)].slice(3):[]);
+ const holeCount=type==="shape"?4:0;
+ const total=cols*Math.ceil((deck.length+holeCount)/cols);
+ const holes=new Set();
+ if(type==="shape"){for(let i=2;holes.size<total-deck.length&&i<total;i+=3)holes.add(i);for(let i=0;holes.size<total-deck.length&&i<total;i++)holes.add(i)}
+ let index=0;
+ for(let i=0;i<total;i++){
+   if(holes.has(i)){const cell=document.createElement("div");cell.className="cell";cell.innerHTML='<div class="hole" aria-hidden="true"></div>';board.append(cell)}
+   else if(index<deck.length){board.append(tileFor(deck[index],index,waveHidden.has(deck[index])));index++}
+ }
+ if(index!==deck.length)throw Error("Board layout mismatch");
+ syncLocks();update();
+ if(type==="preview"){
+   tiles.forEach(t=>flipFace(t,true));
+   const note=$("preview-text");note.classList.remove("hidden");
+   let remaining=levelIndex>=16?2:3;
+   function countdown(){
+     if(remaining>0){note.textContent="Hatırla · "+remaining;remaining--;later(countdown,1000)}
+     else{tiles.forEach(t=>flipFace(t,false));note.classList.add("hidden");
+       session.dispatch({type:"preview-end",generation:session.state().generation})}
+   }
+   countdown();
+ }
+}
+function flip(tile){
+ const state=session.state();
+ const response=session.dispatch({type:"flip",index:tile.index,generation:state.generation});
+ if(!response.accepted)return;
+ if(!started)startClock();
+ flipFace(tile,true);
+ if(response.event==="first-flip"){firstCard=tile;return}
+ const previous=firstCard;firstCard=null;
+ if(!previous)throw Error("Missing first card");
+ if(response.event==="match-pending"){previous.button.classList.add("hit");tile.button.classList.add("hit")}
+ else {previous.button.classList.add("bad");tile.button.classList.add("bad")}
+ update();
+ const generation=response.state.generation;
+ later(()=>{
+   const result=session.dispatch({type:"settle",generation});
+   if(!result.accepted)return;
+   if(result.event==="match-settled"){
+     matchVisual(previous,tile);
+     syncLocks();
+     if(GAME.LEVELS[levelIndex].type==="waves"&&result.state.visiblePairs===GAME.LEVELS[levelIndex].pairs){
+       const note=$("preview-text");note.textContent="Yeni kartlar açıldı!";note.classList.remove("hidden");
+       later(()=>note.classList.add("hidden"),650)
+     }
+     if(result.state.phase==="completed"){
+       clearInterval(clock);elapsed=started?Math.floor((Date.now()-started)/1000):0;
+       const goal=Math.ceil(GAME.LEVELS[levelIndex].pairs*1.8);
+       const medal=GAME.LEVELS[levelIndex].type==="budget"?(result.state.moves<=goal?"🏆 Altın hedef! ":"⭐ Bölüm tamamlandı. "):"🎉 ";
+       $("result").textContent=medal+result.state.moves+" hamle · "+format(elapsed)+" süre";
+       $("result").classList.remove("hidden");
+       if(levelIndex+1===unlocked&&unlocked<GAME.COUNT){unlocked++;persist()}
+       else if(levelIndex===GAME.COUNT-1){$("result").textContent+=" · Tebrikler, 100 bölüm tamamlandı!"}
+     }
+   }else{
+     for(const t of [previous,tile]){t.button.classList.remove("bad");flipFace(t,false)}
+   }
+   update();
+ },response.event==="match-pending"?380:780);
+}
+$("previous").onclick=()=>{if(levelIndex>0){levelIndex--;render()}};
+$("next").onclick=()=>{if(levelIndex+2<=unlocked&&levelIndex+1<GAME.COUNT){levelIndex++;render()}};
+$("advance").onclick=()=>{if(levelIndex+2<=unlocked&&levelIndex+1<GAME.COUNT){levelIndex++;render()}};
+$("restart").onclick=render;
+
+render();
+</script></body></html>

@@ -1,0 +1,16 @@
+import {mkdir,readFile,writeFile,copyFile} from "node:fs/promises";
+import {fileURLToPath} from "node:url";
+import {dirname,resolve} from "node:path";
+const root=resolve(dirname(fileURLToPath(import.meta.url)),"..");
+const htmlPath=resolve(root,"experiments/level-flow-session-v1.html");
+const jsPath=resolve(root,"src/level-core.js");
+const html=await readFile(htmlPath,"utf8");
+const source='../src/level-core.js';
+if(!html.includes(source))throw new Error("Pilot HTML level-core dependency not found");
+const offline=html.replaceAll(source,"./level-core.js");
+if(!offline.includes('<script src="./level-core.js"></script>'))throw new Error("Offline core script not linked");
+const dest=resolve(root,"www");
+await mkdir(dest,{recursive:true});
+await writeFile(resolve(dest,"index.html"),offline,"utf8");
+await copyFile(jsPath,resolve(dest,"level-core.js"));
+console.log("Offline pilot prepared: www/index.html + www/level-core.js");

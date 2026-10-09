@@ -61,6 +61,43 @@
 @keyframes shake3d{0%,100%{translate:0}25%{translate:-4px}75%{translate:4px}}
 @keyframes matchedGlow{40%{box-shadow:0 0 0 4px #72eabd,0 0 26px #47eac7;scale:1.06}}
 @media(prefers-reduced-motion:reduce){.card-inner,.card.bad .card-inner,.card.hit .card-front{transition:none!important;animation:none!important}}
+
+/* Mobile gameplay layout: fit board and controls inside the visual viewport. */
+@media (max-width:600px){
+ html,body{height:100%;overflow:hidden}
+ #app{height:100dvh;min-height:0;overflow:hidden;gap:7px;padding:8px 12px max(9px,env(safe-area-inset-bottom))}
+ .top{flex:0 0 auto;min-height:0}
+ .eyebrow{font-size:.59rem;letter-spacing:.09em}
+ h1{font-size:1.08rem;margin-top:2px}
+ .pill{font-size:.59rem;padding:5px 7px}
+ .level-nav{flex:0 0 auto;gap:5px}
+ .level-arrow{min-width:33px;padding:5px 8px}
+ .level-title{font-size:.75rem;white-space:nowrap}
+ .level-nav #next{font-size:.7rem;padding:6px 9px;min-height:35px}
+ .panel{flex:0 0 auto;padding:8px 10px;border-radius:14px}
+ .tag{font-size:.6rem}
+ .name{font-size:.91rem;margin-bottom:0}
+ .desc{min-height:0;font-size:.68rem;line-height:1.2}
+ .stats{margin-top:5px;gap:5px}
+ .stat{padding:3px 4px;border-radius:8px}
+ .stat b{font-size:.92rem}
+ .stat span{font-size:.56rem;margin-top:0}
+ .board-wrap{min-height:0;min-width:0;flex:1 1 0;padding:6px;border-radius:15px;overflow:hidden}
+ #board,#board[data-shape="true"]{width:min(100%,calc((100dvh - 280px) * var(--columns) / var(--rows)));max-width:100%;max-height:100%;gap:5px;align-content:center}
+ .cell{aspect-ratio:1}
+ .card-back,.card-front{border-radius:9px}
+ .actions{flex:0 0 auto;gap:7px}
+ .primary,.secondary{min-height:38px;padding:7px 9px;font-size:.8rem;border-radius:10px}
+ footer{display:none}
+ .result{flex:0 0 auto;padding:6px 8px;font-size:.72rem}
+}
+@media (max-width:600px) and (max-height:600px){
+ .desc,.pill{display:none}
+ #app{gap:4px}
+ .panel{padding:5px}
+ .stats{margin-top:3px}
+ #board,#board[data-shape="true"]{width:min(100%,calc((100dvh - 230px) * var(--columns) / var(--rows)))}
+}
 </style></head><body>
 <main id="app"><div class="top"><div><div class="eyebrow">Bölüm akışı · Durum Motoru</div><h1>Hafıza Macerası</h1></div><span class="pill">Ana oyundan ayrı</span></div>
 <div class="level-nav"><button id="previous" class="level-arrow" aria-label="Önceki bölüm">‹</button><span id="level-label" class="level-title"></span><button id="next" class="level-arrow" aria-label="Sonraki bölüm">›</button></div>
@@ -116,7 +153,7 @@ function render(){
  deck=CORE.uniquePairDeck(SYMBOLS,level.pairs);
  session=CORE.createSession(level,deck);
  const cols=type==="shape"?4:level.pairs<=3?2:level.pairs>=9?4:3;
- const board=$("board");board.replaceChildren();board.style.setProperty("--columns",cols);board.dataset.shape=String(type==="shape");
+ const board=$("board");board.replaceChildren();board.style.setProperty("--columns",cols);board.style.setProperty("--rows",Math.ceil((level.pairs*2+(type==="shape"?4:0))/cols));board.dataset.shape=String(type==="shape");
  $("mode-name").textContent=LABELS[type];$("mode-desc").textContent=DESCS[type];$("mode-tag").textContent=type==="classic"?"KLASİK":"ÖZEL BÖLÜM";
  $("result").classList.add("hidden");$("preview-text").classList.add("hidden");
  const waveHidden=new Set(type==="waves"?[...new Set(deck)].slice(3):[]);

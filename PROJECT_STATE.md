@@ -209,3 +209,9 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Kod yolu/sözdizimi/statik paketleme kontrolleri geçti; **henüz yeni APK fiziksel olarak üretilmedi veya gerçek telefonda denenmedi**.
 - Commit: `522b637f3575170ca866fe1b0d3a7a345305717c`.
 - Bir sonraki adım: kayıt/kilit, 100. bölüm bitişi ve özel mekanikleri daha güçlü otomatik sınama; ardından en son Android APK derlemesi ve cihaz kabulü. Gereksiz arayüz/proje yeniden tasarımı yapma.
+
+## İlerleme ve final bölümü regresyonu (2026-10-09)
+- `game-mobile-v1.html` 100. bölümde kutlama mesajı gösterirken tamamlanma bilgisini ayrıca `kart_eslestirme_100_v1_completed=1` olarak kaydeder. Önceki `kart_eslestirme_100_v1` en son açılan bölüm kaydı aynen korunur.
+- Sahte DOM + zamanlayıcılar üzerinde oyun akışı yürütüldü: yeni kullanıcı 1. bölümde başlar, iki eşleşmeden sonra 2. bölüm açılır ve kayıt yapılır; kayıtlı 7. seviyeye yeniden giriş ve kilitli sonraki bölüm; 100. bölümde 20 kartın tamamlanması, kutlama yazısı ve final kaydı. 3 senaryo geçti.
+- Güncelleme: `645c413a4cb6b2a08809ec53fdca18c2e50a4923`.
+- **Bu testler gerçek telefon/Android testi değildir.** Son final APK için gerçek derleme ve kullanıcının onayı beklenir. Görsel, kart, bölüm mekaniği değişmedi.

@@ -63,3 +63,19 @@ Kullanıcının kesin talebi: Emoji kütüphanesi belirgin biçimde büyüsün; 
 - Büyük kütüphane artışı ve mekanik genişleme küçük, geri alınabilir dilimlerle doğrulanacak. İlk iş benzersiz çift doğruluğu ve içerik doğrulayıcılarıdır.
 
 Durum: **hedef kaydı; henüz emoji kataloğu, bölüm üreticisi veya oyun kodu değişmedi**.
+
+## Bölüm laboratuvarı oyuncu geri bildirimi — 2026-10-09
+
+İlk laboratuvar üçlüsü (klasik, ön izleme, şekilli tahta) kullanıcı tarafından 5/5 değerlendirildi. İkinci üçlü (hamle ustalığı, buz kırıcı, kart dalgaları) da kullanıcı tarafından beğenildi. **Altı bölüm karakteri ilk oyuncu kabulünden geçti; geniş ölçekli kalite/doğrulama kanıtı değildir.**
+
+Karar:
+- Yeni mekanik arayışına şimdilik ara ver.
+- Bu altı arketipi korunacak adaylar olarak kabul et ve **kendi iç varyasyonlarını** tasarla (ön izleme süresi ve bilgi miktarı; şekilli tahtada güvenli boşluk düzenleri; hamle hedefi/adil yıldız ölçütü; buz yerleşimi/çözülme sırası; dalga sayısı/boyutu; klasik bölümde amaca uygun tempo).
+- Sonraki aşamada bazı arketipleri birbirleriyle birleştirmeyi araştır; kombinasyonları yeni içerik saymadan önce gerçek oynanış farkı ve adillik testlerinden geçir.
+- Rastgelelik ve emoji farklılığı tek başına benzersizlik değildir; bölüm içinde her emoji yalnızca bir çift oluşturur.
+- Oyunun mevcut 100 bölümünü topluca değiştirme. Önce kural/konfigürasyon altyapısı ve küçük elle değerlendirilen bölüm grubu oluştur.
+- Mobil dikey ekran, rahat dokunmatik alanlar, anlaşılır öğretim ve korunmuş ilerleme önemini koruyor.
+- Deneyler: `experiments/level-feel.html`, `experiments/level-feel-v2.html`.
+- İkinci laboratuvar için kullanıcı sayısal puan vermedi; yalnız üç karakteri de beğendiğini bildirdi.
+
+Durum: **geri bildirim ve karar kaydı; bu commit oyun koduna dokunmaz.**

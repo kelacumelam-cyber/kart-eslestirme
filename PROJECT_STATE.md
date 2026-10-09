@@ -224,3 +224,10 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Testler saf motor düzeyindedir; **tam tarayıcı animasyonları, mobil Android ses/yerleşim ve gerçek APK derlemesi henüz tekrar test edilmedi**.
 - Commitler: test `2fe699dc67e0efbf7e31a89c1ab3e7755f5a7f7e`, npm entegrasyonu `903aa36b65783510fc9425352352dd8364b5a11e`.
 - Sonraki adım: hata/fazla hızlı dokunma ve re-render senaryolarıyla sahne regresyonlarını genişletmek, ardından yerel Android APK için kullanıcıdan komut çalıştırmasını isteyerek final cihaz kabulü.
+
+## Mobil UI yarış durumu regresyonu (2026-10-09)
+- `tests/level-100-ui-races.test.cjs` eklendi ve `npm run test:core` içine bağlandı.
+- 3 simüle edilmiş UI kontrolü geçti: aynı karta art arda dokunma ve eşleşme beklerken diğer dokunuşların engellenmesi; yeniden başlatmada eski zamanlayıcının yeni oturumu bozmaması; kilidi açılmış önceki bölüme dönüş ve tekrar geçiş.
+- Kontrol mock DOM ve sahte zamanlayıcıyla kod düzeyinde yürütüldü: **3/3 PASS**. Henüz gerçek mobil dokunmatik ve Android APK doğrulaması değil.
+- Commit: test `35f07de0d8b08642759e26f6ef8d04029d70385a`, test entegrasyonu `e764f17d1b0177850fce3d824a19c9d1eafb3113`.
+- Ürün davranışı değiştirilmedi. Son büyük kalan eşik: Windows üzerinde güncel mobil oyundan Android APK derlemek ve Galaxy M12 gibi gerçek cihazda görsel/ses/oynanış kabulünü yapmak.

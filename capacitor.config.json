@@ -1,6 +1,6 @@
 {
   "appId": "com.kelacumelam.karteslestirme.test",
-  "appName": "Kart Eşleştirme Test",
+  "appName": "Hafıza Macerası",
   "webDir": "www",
   "server": {
     "androidScheme": "https"

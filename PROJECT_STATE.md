@@ -128,3 +128,14 @@ Durum: yalnız hedef kaydı, oyun kodu değiştirilmedi.
 - Mevcut onaylı `experiments/level-flow-23.html` ve ana `index.html` değiştirilmedi.
 - **Gerçek tarayıcı/telefon testi ve tam mekanik davranış doğrulaması henüz yok.** Seed kaydı, gelecekte deterministik tahta üretimini mümkün kılacak şema alanıdır; mevcut pilotun karıştırma işlemi hâlâ rastgele yapılmaktadır.
 - Sonraki adım: konfigürasyon ve oyun mekaniği kodunu daha temiz modüllere ayırmak, kapsamlı davranış testleri ve küçük cihaz kabulünden sonra ana oyuna aktarmak.
+
+## Yeniden kullanılabilir bölüm çekirdeği — 2026-10-09
+
+- Yeni `src/level-core.js`: CommonJS ve tarayıcıda çalışabilen bağımsız modül. 23 pilot bölümünün şemalı tanımlarını, benzersiz çiftli deste üreticisini, deterministik seed yardımcı işlevini ve doğrulayıcıları içerir.
+- Yeni `tests/level-core.test.cjs`: 23 tanım, 6 arketip, 1.000 deste, seed kararlılığı, hatalı girdiler. Node assert test içeriği ayrıca JavaScript ortamında çalıştırıldı ve geçti.
+- Yeni `experiments/level-flow-core-v1.html`: kabul edilmiş pilotun alternatif modüler sürümü. Giriş smoke testinde 1. bölüm, 4 kart ve `0/2` sayacı oluştu (sahte DOM). **Gerçek tarayıcı/Android cihaz test edilmedi**.
+- Ana oyun `index.html` ve oyuncu tarafından beğenilen `experiments/level-flow-23.html` değiştirilmedi. Eski güvenli sürümler korunuyor.
+- Mevcut prototipin `seed` alanı meta veri niteliğinde; modüler deney kart dağıtımını henüz seed'e bağlamıyor. Kalıcı seviye sözleşmesi ve tam mekaniği test etmeden ana oyuna aktarılmayacak.
+- Sonraki mühendislik hedefi: özel mekaniklerin saf mantığını ayırmak, durum/zamanlayıcı/regresyon testleri ve kontrollü Android tarayıcı kabulü.
+
+Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.

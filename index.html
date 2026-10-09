@@ -730,6 +730,18 @@ function seededShuffle(arr, seed) {
   return a;
 }
 
+// Her sembol bölüm başına yalnızca bir çift oluşturabilir.
+function buildUniqueDeck(pool, pairCount, dailySeed = null) {
+  const unique = [...new Set(pool)];
+  if (!Number.isInteger(pairCount) || pairCount < 1 || unique.length < pairCount) {
+    throw new Error("Bölüm için yeterli benzersiz emoji bulunmuyor");
+  }
+  const ordered = dailySeed === null ? shuffle(unique) : seededShuffle(unique, dailySeed);
+  const chosen = ordered.slice(0, pairCount);
+  const cards = [...chosen, ...chosen];
+  return dailySeed === null ? shuffle(cards) : seededShuffle(cards, dailySeed + 77);
+}
+
 function getDailyConfig() {
   const seed = getDailySeed();
   const worldIndex = seed % WORLDS.length;
@@ -843,18 +855,10 @@ function startLevel(l, isDaily = false) {
   $("pr").textContent = "0/" + totalPairs;
   $("cb").textContent = "x1";
 
-  // EMOJİLER
-  let deck;
-  if (isDailyActive) {
-    const d = getDailyConfig();
-    const shuffledEmojis = seededShuffle(d.world.emojis, d.seed);
-    const selected = shuffledEmojis.slice(0, totalPairs);
-    deck = seededShuffle([...selected, ...selected], d.seed + 77);
-  } else {
-    const availableEmojis = shuffle(cfg.world.emojis);
-    const selected = availableEmojis.slice(0, totalPairs);
-    deck = shuffle([...selected, ...selected]);
-  }
+  // Normal ve günlük bölümler aynı benzersiz-çift kuralını kullanır.
+  const deck = isDailyActive
+    ? buildUniqueDeck(cfg.world.emojis, totalPairs, getDailySeed())
+    : buildUniqueDeck(cfg.world.emojis, totalPairs);
 
   const board = $("board");
   board.innerHTML = "";

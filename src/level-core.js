@@ -56,24 +56,25 @@
     const frozen=new Set(level.type==="ice"?[...new Set(deck)].slice(0,Math.min(2,level.pairs-1)):[]);
     const waveHidden=new Set(level.type==="waves"?[...new Set(deck)].slice(3):[]);
     let generation=1, phase=level.type==="preview"?"preview":"playing";
-    let selected=null, moves=0, matched=new Set(), unlocked=new Set(), waveActive=false;
+    let selected=null, pendingResult=null, moves=0, matched=new Set(), unlocked=new Set(), waveActive=false;
     const state=()=>Object.freeze({generation,phase,moves,matchedPairs:matched.size,selected,
       frozenSymbols:[...frozen].filter(s=>!unlocked.has(s)),
       visiblePairs:level.type==="waves"&&!waveActive?Math.min(3,level.pairs):level.pairs});
     function dispatch(action) {
       if(!action||action.generation!==generation)return {accepted:false,event:"stale",state:state()};
       if(action.type==="preview-end"&&phase==="preview"){phase="playing";return {accepted:true,event:"preview-ended",state:state()}}
-      if(action.type==="restart"){generation++;phase=level.type==="preview"?"preview":"playing";selected=null;moves=0;matched.clear();unlocked.clear();waveActive=false;return {accepted:true,event:"restarted",state:state()}}
+      if(action.type==="restart"){generation++;phase=level.type==="preview"?"preview":"playing";selected=null;pendingResult=null;moves=0;matched.clear();unlocked.clear();waveActive=false;return {accepted:true,event:"restarted",state:state()}}
       if(action.type==="settle"&&phase==="settling"){
-        const matchedNow=action.matched===true;
+        const matchedNow=pendingResult!==null&&pendingResult.success;
+        if(pendingResult===null)return {accepted:false,event:"missing-pending",state:state()};
         if(matchedNow){
-          matched.add(action.symbol);
+          matched.add(pendingResult.symbol);
           if(level.type==="ice"){
             const next=[...frozen].find(s=>!unlocked.has(s));if(next!==undefined)unlocked.add(next);
           }
           if(level.type==="waves"&&matched.size>=3)waveActive=true;
         }
-        selected=null;phase=matched.size===level.pairs?"completed":"playing";
+        selected=null;pendingResult=null;phase=matched.size===level.pairs?"completed":"playing";
         return {accepted:true,event:matchedNow?"match-settled":"mismatch-settled",state:state()};
       }
       if(action.type!=="flip"||phase!=="playing")return {accepted:false,event:"busy",state:state()};
@@ -84,7 +85,7 @@
         return {accepted:false,event:"ineligible",state:state()};
       if(selected===null){selected=index;return {accepted:true,event:"first-flip",symbol,state:state()}}
       const first=deck[selected],success=first===symbol;
-      moves++;phase="settling";
+      moves++;phase="settling";pendingResult={success,symbol:success?symbol:null};
       return {accepted:true,event:success?"match-pending":"mismatch-pending",symbol:success?symbol:null,
         indices:[selected,index],state:state()};
     }

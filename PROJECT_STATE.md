@@ -189,3 +189,9 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Oyun JavaScript'i ile karşılaştırmada yalnızca dünya temasını ayarlayan **bir satır** değişti; oyun mantığı korunuyor. JS sözdizimi geçti.
 - Henüz mobil tarayıcı/Android görüntü kabulü yok. Bu ayrı dosya, orijinal `index.html`, `game-100.html` ve paketleyici aynı şekilde korunuyor. APK paketleyici hâlâ `game-100.html` hedefler; kullanıcı görsel sürümü onaylamadan paketleme hedefi değiştirilmez.
 - Görsel checkpoint: `6ced2efc9544f57417e072912fc3199f76a6c03e`.
+
+## Mobil oyun arayüzü V1 küçük ilerleme (2026-10-09)
+- `game-mobile-v1.html`: dünya başına 10 bölümlük hafif ilerleme çubuğu ve bölüm tamamlanmadan pasif olan alt düğmede `Önce Bölümü Bitir` etiketi eklendi.
+- JavaScript sözdizimi ve sahte DOM başlangıç testi geçti; ilk bölüm 4 kart, 100. bölüm 20 kart; ilerleme çubuğu son bölümde %100.
+- Mekanikler, sesler ve temel oynanış değiştirilmedi; gerçek cihazda henüz doğrulanmadı.
+- Görsel checkpoint: `f11572e0afd30855eec23331e90e22e6f50e5f14`.

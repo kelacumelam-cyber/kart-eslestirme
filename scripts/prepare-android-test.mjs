@@ -16,4 +16,19 @@ await mkdir(dest,{recursive:true});
 await writeFile(resolve(dest,"index.html"),offline,"utf8");
 await copyFile(jsPath,resolve(dest,"level-core.js"));
 await copyFile(levelsPath,resolve(dest,"level-100.js"));
+// Update the native Android launcher icon when a Capacitor Android project exists.
+const androidRes=resolve(root,"android/app/src/main/res");
+const launcher=resolve(root,"assets/android-launcher-fox.xml");
+try{
+ const {stat}=await import("node:fs/promises");
+ if((await stat(androidRes)).isDirectory()){
+  const drawable=resolve(androidRes,"drawable");const adaptive=resolve(androidRes,"mipmap-anydpi-v26");
+  await mkdir(drawable,{recursive:true});await mkdir(adaptive,{recursive:true});
+  await copyFile(launcher,resolve(drawable,"kart_fox_launcher.xml"));
+  const adaptiveXml='<?xml version="1.0" encoding="utf-8"?>\\n<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android"><background android:drawable="@android:color/transparent"/><foreground android:drawable="@drawable/kart_fox_launcher"/></adaptive-icon>\\n';
+  await writeFile(resolve(adaptive,"ic_launcher.xml"),adaptiveXml);
+  await writeFile(resolve(adaptive,"ic_launcher_round.xml"),adaptiveXml);
+  console.log("Custom fox memory-card launcher prepared for Android adaptive icons");
+ }
+}catch(error){if(error.code!=="ENOENT")throw error}
 console.log("Offline 100-level game prepared: www/index.html + both engine scripts");

@@ -197,9 +197,16 @@ button:disabled{opacity:.45;cursor:default}
 .card-back::after{color:var(--world-accent)}
 @media(prefers-reduced-motion:reduce){.primary,.secondary,.level-arrow{transition:none!important}}
 .level-arrow-spacer{display:block;min-width:45px;width:45px;flex-shrink:0}.level-nav .level-title{flex:1;text-align:center}.top{justify-content:flex-start}
+
+.level-center{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:6px;flex:1;min-width:0}
+.level-center .level-title{flex:none;font-size:.9rem;font-weight:850;letter-spacing:.01em}
+.world-progress{height:5px;width:min(160px,70%);border-radius:999px;background:#07192b99;border:1px solid #ffffff36;overflow:hidden}
+#world-progress-fill{display:block;height:100%;width:10%;background:linear-gradient(90deg,var(--world-accent),#fff2b6);border-radius:999px;transition:width .3s ease}
+.actions .primary:disabled{opacity:.68;filter:saturate(.45);box-shadow:inset 0 1px #ffffff22,0 2px 0 #0004;cursor:default}
+@media(prefers-reduced-motion:reduce){#world-progress-fill{transition:none}}
 </style></head><body>
 <main id="app"><div class="top"><div><div class="eyebrow">10 Dünya · 100 Bölüm</div><h1>Hafıza Macerası</h1></div></div>
-<div class="level-nav"><button id="previous" class="level-arrow" aria-label="Önceki bölüm">‹</button><span id="level-label" class="level-title"></span><span class="level-arrow-spacer" aria-hidden="true"></span></div>
+<div class="level-nav"><button id="previous" class="level-arrow" aria-label="Önceki bölüm">‹</button><div class="level-center"><span id="level-label" class="level-title"></span><div class="world-progress" aria-hidden="true"><span id="world-progress-fill"></span></div></div><span class="level-arrow-spacer" aria-hidden="true"></span></div>
 <section class="panel"><div class="tag" id="mode-tag"></div><div class="name" id="mode-name"></div><div class="desc" id="mode-desc"></div><div class="stats"><div class="stat"><b id="pairs"></b><span>Çift</span></div><div class="stat"><b id="moves"></b><span>Hamle</span></div><div class="stat"><b id="time"></b><span>Süre</span></div></div></section>
 <div class="board-wrap"><div class="preview hidden" id="preview-text" aria-live="polite"></div><div class="board" id="board" aria-label="Eşleştirme tahtası"></div></div>
 <div id="result" class="result hidden" role="status"></div>
@@ -226,11 +233,12 @@ function update(){
  $("pairs").textContent=state.matchedPairs+"/"+GAME.LEVELS[levelIndex].pairs;
  $("moves").textContent=String(state.moves);$("time").textContent=format(elapsed);
  $("previous").disabled=levelIndex===0;
+ $("world-progress-fill").style.width=(((levelIndex%10)+1)*10)+"%";
  const canAdvance=levelIndex+2<=unlocked&&levelIndex+1<GAME.COUNT;
 
 
  $("advance").disabled=!canAdvance;
- $("advance").textContent=levelIndex===GAME.COUNT-1?"100 Bölüm Tamam!":"Sonraki Bölüm →";
+ $("advance").textContent=levelIndex===GAME.COUNT-1?"100 Bölüm Tamam!":canAdvance?"Sonraki Bölüm →":"Önce Bölümü Bitir";
 }
 function startClock(){if(started)return;started=Date.now();clock=setInterval(()=>{elapsed=Math.floor((Date.now()-started)/1000);update()},400)}
 function flipFace(tile,on){tile.button.classList.toggle("open",on);tile.button.setAttribute("aria-label",on?tile.emoji:"Kapalı kart")}

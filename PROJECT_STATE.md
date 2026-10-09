@@ -48,3 +48,18 @@ Kullanıcının gözlemi: yüksek bölümlerde **aynı emoji bir bölümde birde
 - Sahte içerik hacmi yerine gerçekten ayırt edilebilir, eğlenceli 100+ bölüm hedefi; kapsamı test sonucuna göre artır.
 - Açılış/ana menü tasarım hedefleri yukarıda; bu işten ayrı iterasyon.
 Durum: **tasarım hedefleri kayıtlı; bu commit oyun kodunu değiştirmez**.
+
+## Ürün kalite ilkesi — görsel tutarlılık ve gerçek bölüm benzersizliği (2026-10-09)
+
+Kullanıcının kesin talebi: Emoji kütüphanesi belirgin biçimde büyüsün; ancak mevcut renkli Unicode emoji diliyle görsel uyum bozulmasın. **Bölüm sayısı kozmetik değişikliklerle şişirilmesin; oyuncu kandırılmasın.**
+
+- Emoji kaynakları veri odaklı kategoriler/alt havuzlar olarak yönetilecek; dünyayla alakasız semboller sırf sayı artırmak için eklenmeyecek.
+- Tek bölümde her sembol yalnız bir çifttir; görsel olarak birbirine aşırı benzeyen semboller için ayrı çakışma denetimi uygulanacak.
+- Farklı Android/Windows emoji çizimleri ve font desteği gerçek cihazda kontrol edilecek. İleride görsel birliği için sahip olunan/lisanslı ikon seti araştırılabilir, ancak şimdilik mevcut estetik korunur.
+- **İçerik çeşitliliği ile oynanış çeşitliliği ayrı ölçülecek.** Rastgele kart dağılımı, farklı emoji, renk, tema veya sırf ızgara değişimi tek başına benzersiz oynanış olarak sayılmayacak.
+- Seviye tanımı; mekanik, hedef, karar tipi, öğrenilen beceri, oyuncuya uygulanan kısıt, zorluk/tempo ve sunum açısından değerlendirilecek.
+- Ardışık bölümlerde eşdeğer oynanışları tespit eden otomatik benzerlik raporu istenecek. Tekrarlı bölümler geçerli bir öğretme/pekiştirme gerekçesi taşımıyorsa yeniden tasarlanacak.
+- 500 sayısı içerik kotası değildir; gerçek çeşitlilik doğrulanmıyorsa daha az ama iyi bölüm yayımlamak tercih edilecek. Rastgele üretilen bölüm başına benzersizlik garantisi iddia edilmeyecek.
+- Büyük kütüphane artışı ve mekanik genişleme küçük, geri alınabilir dilimlerle doğrulanacak. İlk iş benzersiz çift doğruluğu ve içerik doğrulayıcılarıdır.
+
+Durum: **hedef kaydı; henüz emoji kataloğu, bölüm üreticisi veya oyun kodu değişmedi**.

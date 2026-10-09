@@ -1,5 +1,5 @@
 {
-  "name": "kart-eslestirme-android-test",
+  "name": "kart-eslestirme-100",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -8,7 +8,7 @@
     "android:sync": "npm run android:prepare && npx cap sync android",
     "android:open": "npx cap open android",
     "android:apk": "npm run android:sync && node scripts/build-debug-apk.mjs",
-    "test:core": "node tests/level-core.test.cjs && node tests/session.test.cjs"
+    "test:core": "node tests/level-core.test.cjs && node tests/session.test.cjs && node tests/level-100.test.cjs"
   },
   "dependencies": {
     "@capacitor/core": "^7.0.0",

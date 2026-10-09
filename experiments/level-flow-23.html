@@ -37,6 +37,11 @@
 @keyframes shake3d{0%,100%{translate:0}25%{translate:-4px}75%{translate:4px}}
 @keyframes matchedGlow{40%{box-shadow:0 0 0 4px #72eabd,0 0 26px #47eac7;scale:1.06}}
 @media(prefers-reduced-motion:reduce){.card-inner,.card.spawn,.card.bad .card-inner,.card.hit .card-front,.card.thaw .card-back{transition:none!important;animation:none!important}}
+
+/* Matched-pair feedback: preserve the board positions, then fade completed cards. */
+.card.matched{opacity:.28!important;pointer-events:none;filter:saturate(.48);transition:opacity .55s ease,filter .55s ease!important}
+.card.matched .card-inner{transform:rotateY(180deg) scale(.94);transition:transform .38s cubic-bezier(.22,.73,.22,1)}
+@media(prefers-reduced-motion:reduce){.card.matched,.card.matched .card-inner{transition:none!important}}
 </style></head><body>
 <main id="app"><div class="top"><div><div class="eyebrow">Bölüm akışı · Pilot 2</div><h1>Hafıza Macerası</h1></div><span class="pill">Ana oyundan ayrı</span></div>
 <div class="level-nav"><button id="previous" class="level-arrow" aria-label="Önceki bölüm">‹</button><span id="level-label" class="level-title"></span><button id="next" class="level-arrow" aria-label="Sonraki bölüm">›</button></div>

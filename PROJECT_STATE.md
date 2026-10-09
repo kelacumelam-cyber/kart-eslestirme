@@ -157,3 +157,11 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Aynı modülden 23 bölümün tamamı sahte DOM'da oluşturulup kart adedi kontrol edildi: 23/23 geçti; 1. bölüm 4 kart.
 - **Gerçek tarayıcı, dokunmatik ve özel mekaniklerin uçtan uca animasyon testi henüz yapılmadı.** Özellikle buz çözülmesi, dalgaların görünürlüğü ve ön izleme cihazda kabul bekliyor. Üretim/ana oyun ve onaylanan `level-flow-23.html` değiştirilmedi.
 - Sonraki adım: izole sayfada gerçek tarayıcı kabulü veya daha ayrıntılı otomatik olay testleri; başarı kanıtından önce ana oyuna geçiş yapma.
+
+## Yerel Android APK denemesi (2026-10-09)
+
+- Kullanıcının isteği: Git Work/Actions kotası harcamadan, Hexiva'da kullanılan eski yerel terminal + Android Studio + Gradle yöntemiyle test APK'sı hazırlamak.
+- `package.json`, `capacitor.config.json`, `scripts/prepare-android-test.mjs`, `scripts/build-debug-apk.mjs`, `.gitignore`, `ANDROID_TEST.md` eklendi.
+- Hedef **yalnızca** `experiments/level-flow-session-v1.html` + `src/level-core.js`; offline `www/index.html` üretimi, Capacitor Android scaffold, `assembleDebug` ve `dist/kart-eslestirme-test-debug.apk` kopyalama komutları hazır.
+- Ana oyun `index.html` ve kabul edilmiş deney değişmedi. Android proje klasörü yerelde üretilecek ve Git'e eklenmeyecek.
+- **Henüz gerçek Gradle/APK derlemesi ve telefon testi yapılmadı.** Kullanıcı yerel terminalde README yönergesini çalıştırıp sonucu bildirecek.

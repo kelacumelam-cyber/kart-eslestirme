@@ -261,11 +261,15 @@ function stopFireworks(){
  fireworksFrame=0;fireworksParticles=[];fireworksUntil=0;
  const canvas=$("fireworks");if(canvas){const c=canvas.getContext("2d");if(c)c.clearRect(0,0,canvas.width,canvas.height)}
 }
+function primeFireworksAudio(){
+ try{const AudioContextType=window.AudioContext||window.webkitAudioContext;if(!AudioContextType)return;
+  fireworksAudio=fireworksAudio||new AudioContextType();
+  if(fireworksAudio.state==="suspended")fireworksAudio.resume().catch(()=>{});
+ }catch{}
+}
 function celebrationSound(){
  try{
-  const AudioContextType=window.AudioContext||window.webkitAudioContext;
-  if(!AudioContextType)return;
-  fireworksAudio=fireworksAudio||new AudioContextType();
+  if(!fireworksAudio)return;
   if(fireworksAudio.state==="suspended")fireworksAudio.resume().catch(()=>{});
   const now=fireworksAudio.currentTime;
   [0,.15,.30,.48].forEach((delay,i)=>{
@@ -376,6 +380,7 @@ function render(){
  }
 }
 function flip(tile){
+ primeFireworksAudio();
  const state=session.state();
  const response=session.dispatch({type:"flip",index:tile.index,generation:state.generation});
  if(!response.accepted)return;

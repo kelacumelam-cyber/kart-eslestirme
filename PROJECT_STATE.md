@@ -247,3 +247,9 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - `scripts/prepare-android-test.mjs` içindeki adaptive-icon XML satır sonu kaçışları düzeltildi; dosyanın üretilebilecek XML metni artık gerçek satır sonları içerir.
 - Kod JS sözdizimi ve UI yarış testi (3/3) tekrar geçti; **gerçek eski Android cihaz performans/çökme ve APK build doğrulaması henüz yapılmadı**.
 - Commitler: oyun `57c9c9f`; native ikon XML `489a47e`. APK güncellemesi kullanıcı isteğine uygun olarak en son yapılacak.
+
+## Galaxy M12 — ana menü / arka plan kaynak koruması (2026-10-09)
+- Cihaz odaklı kaynak tasarrufu: oyun ana menüdeyken Android uygulamasının arka plandan dönmesi, oyun süresi interval'ini tekrar başlatmamalıdır. `game-mobile-v1.html` visibilitychange dönüşü ve tickClock'a `game-concealed` kontrolü eklendi.
+- Sahte DOM testlerinin document.addEventListener içermeyebilmesi sebebiyle listener opsiyonel kurulur; mevcut **3/3 UI race testleri tekrar PASS**.
+- Commitler `ce051916420123a05196c781b1bc24a4b7d60772`, `d4b0777faff1b412208bea8488aff36b06555d12`.
+- Fiziksel Galaxy M12'de FPS/ısınma/pil/Android arka plan sınaması henüz yapılmadı; APK güncellemesini en son yap.

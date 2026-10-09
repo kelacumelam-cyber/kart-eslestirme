@@ -253,3 +253,19 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Sahte DOM testlerinin document.addEventListener içermeyebilmesi sebebiyle listener opsiyonel kurulur; mevcut **3/3 UI race testleri tekrar PASS**.
 - Commitler `ce051916420123a05196c781b1bc24a4b7d60772`, `d4b0777faff1b412208bea8488aff36b06555d12`.
 - Fiziksel Galaxy M12'de FPS/ısınma/pil/Android arka plan sınaması henüz yapılmadı; APK güncellemesini en son yap.
+
+## SEZON KAPANIŞI — Güvenli checkpoint (2026-10-09)
+
+**Karar:** Kullanıcının isteğiyle Hafıza Macerası / kart-eslestirme geliştirmesi şimdilik durduruldu; sıradaki iş başka bir oyunun Android APK'sı olacak. Bu repo üzerinde yeni özellik, test veya APK derleme işlemi başlatılmayacak, yeni bir talep gelirse kaldığı yerden devam edilecek.
+
+**Mevcut kabul edilmiş ürün:** `game-mobile-v1.html` (10 dünya / 100 bölüm / 6 oynanış türü); özgün `game-100.html` ve eski `index.html` korunuyor. Giriş ekranı, ayrı ayarlar, kayıtlı ilerleme, ses ve titreşim seçenekleri, yanlış eşleşme titreşimi, bölüm sonu kutlama, Android launcher ikonu; düşük güçlü mobil cihazlar için kaynak azaltımı ve background timer koruması mevcut.
+
+**Kayıt koruması:** `kart_eslestirme_100_v1` (en son açılmış bölüm), `kart_eslestirme_100_v1_completed` (final), `kart_eslestirme_settings_v1` (ses/titreşim). Kayıt verileri cihazda yerel, bulut kaydı yok. İlk kez kuran kullanıcı 1. bölümden başlar.
+
+**Doğrulama kanıtı:** 100 seviye × 4 kart dağılımı = 400/400 tam mekanik simülasyonu (3.000 eşleşme); 3/3 UI yarış durumu simülasyonu; giriş/ayar/kayıt mock kontrolleri; sözdizimi kontrolü. Bunlar gerçek cihazda FPS/ısınma/ses/haptik testinin yerine geçmez.
+
+**APK:** Kullanıcı son sürüm için yerel `git pull` ve `npm.cmd run android:apk` komutlarını aldı; APK derlemesinin başarı çıktısı bu oturumda henüz görülmedi. Üzerine kurulum mevcut uygulama verilerini korumak için tercih edilir.
+
+**Son kod commitleri:** `57c9c9f` (ilk kurulum/performans), `489a47e` (ikon XML), `d4b0777` (arka plan zamanlayıcı düzeltmesi). Ürün dosyaları bu kapanışta değiştirilmiyor.
+
+**Yeniden açılırsa:** Önce yerel güncel APK'nın Galaxy M12'de görsel/ses/titreşim/ısınma kabulünü doğrula; başarısızlık varsa yalnız kanıta dayalı minimal düzeltme yap. Bu checkpoint sonrasında yeni oyun APK işine ayrı repoda geç.

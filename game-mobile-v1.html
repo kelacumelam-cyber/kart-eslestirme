@@ -212,11 +212,16 @@ button:disabled{opacity:.45;cursor:default}
 @keyframes winAppear{0%{opacity:0;transform:translateY(14px) scale(.94)}65%{transform:translateY(-3px) scale(1.03)}100%{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes nextReady{0%{transform:scale(.96);filter:brightness(1.5)}60%{transform:scale(1.035)}100%{transform:scale(1)}}
 @media(prefers-reduced-motion:reduce){.actions .primary.ready,.result.win-pop{animation:none!important}}
+
+#fireworks{position:absolute;inset:0;width:100%;height:100%;z-index:7;pointer-events:none}
+.result{border-color:var(--world-accent);box-shadow:0 0 18px #ffcc6833}
+.result.win-pop{animation:none}
+@media(prefers-reduced-motion:reduce){#fireworks{display:none}}
 </style></head><body>
 <main id="app"><div class="top"><div><div class="eyebrow">10 Dünya · 100 Bölüm</div><h1>Hafıza Macerası</h1></div></div>
 <div class="level-nav"><button id="previous" class="level-arrow" aria-label="Önceki bölüm">‹</button><div class="level-center"><span id="level-label" class="level-title"></span><div class="world-progress" aria-hidden="true"><span id="world-progress-fill"></span></div></div><span class="level-arrow-spacer" aria-hidden="true"></span></div>
 <section class="panel"><div class="tag" id="mode-tag"></div><div class="name" id="mode-name"></div><div class="desc" id="mode-desc"></div><div class="stats"><div class="stat"><b id="pairs"></b><span>Çift</span></div><div class="stat"><b id="moves"></b><span>Hamle</span></div><div class="stat"><b id="time"></b><span>Süre</span></div></div></section>
-<div class="board-wrap"><div class="preview hidden" id="preview-text" aria-live="polite"></div><div class="board" id="board" aria-label="Eşleştirme tahtası"></div></div>
+<div class="board-wrap"><canvas id="fireworks" aria-hidden="true"></canvas><div class="preview hidden" id="preview-text" aria-live="polite"></div><div class="board" id="board" aria-label="Eşleştirme tahtası"></div></div>
 <div id="result" class="result hidden" role="status"></div>
 <div class="actions"><button class="secondary" id="restart">↻ Yeniden</button><button class="primary" id="advance">Sonraki Bölüm →</button></div>
 <footer>100 bölüm · İlerlemen bu telefona kaydedilir. İnternetsiz oynanabilir.</footer>
@@ -249,6 +254,68 @@ function update(){
  $("advance").classList.toggle("ready",canAdvance);
  $("advance").textContent=levelIndex===GAME.COUNT-1?"100 Bölüm Tamam!":canAdvance?"Sonraki Bölüm →":"Sonraki Bölüm →";
 }
+
+let fireworksFrame=0,fireworksParticles=[],fireworksUntil=0,fireworksAudio=null;
+function stopFireworks(){
+ if(fireworksFrame)cancelAnimationFrame(fireworksFrame);
+ fireworksFrame=0;fireworksParticles=[];fireworksUntil=0;
+ const canvas=$("fireworks");if(canvas){const c=canvas.getContext("2d");if(c)c.clearRect(0,0,canvas.width,canvas.height)}
+}
+function celebrationSound(){
+ try{
+  const AudioContextType=window.AudioContext||window.webkitAudioContext;
+  if(!AudioContextType)return;
+  fireworksAudio=fireworksAudio||new AudioContextType();
+  if(fireworksAudio.state==="suspended")fireworksAudio.resume().catch(()=>{});
+  const now=fireworksAudio.currentTime;
+  [0,.15,.30,.48].forEach((delay,i)=>{
+   const oscillator=fireworksAudio.createOscillator(),gain=fireworksAudio.createGain();
+   oscillator.type="sine";
+   oscillator.frequency.setValueAtTime([523.25,659.25,783.99,1046.5][i],now+delay);
+   gain.gain.setValueAtTime(.0001,now+delay);
+   gain.gain.exponentialRampToValueAtTime(.085,now+delay+.015);
+   gain.gain.exponentialRampToValueAtTime(.0001,now+delay+.22);
+   oscillator.connect(gain);gain.connect(fireworksAudio.destination);
+   oscillator.start(now+delay);oscillator.stop(now+delay+.24);
+  });
+ }catch{}
+}
+function launchFireworks(){
+ stopFireworks();celebrationSound();
+ if(window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+ const canvas=$("fireworks"),area=canvas.parentElement;
+ const rect=area.getBoundingClientRect(),ratio=Math.min(window.devicePixelRatio||1,2);
+ const w=Math.max(1,rect.width),h=Math.max(1,rect.height);
+ canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);
+ const ctx=canvas.getContext("2d");if(!ctx)return;
+ ctx.setTransform(ratio,0,0,ratio,0,0);
+ const colors=["#ffe08b","#69f3e6","#ff95cb","#c9a7ff","#fff7d5"];
+ const bursts=[[.25,.32],[.73,.26],[.50,.54],[.16,.67],[.84,.64]];
+ for(const [bi,[cx,cy]] of bursts.entries()){
+  for(let i=0;i<25;i++){
+   const a=Math.PI*2*i/25+(Math.random()-.5)*.22;
+   const speed=55+Math.random()*95;
+   fireworksParticles.push({x:w*cx,y:h*cy,vx:Math.cos(a)*speed,vy:Math.sin(a)*speed,
+    r:1.7+Math.random()*2.4,color:colors[(i+bi)%colors.length],birth:bi*.17,life:.65+Math.random()*.35});
+  }
+ }
+ const started=performance.now(),generation=serial;
+ function frame(now){
+  if(generation!==serial){stopFireworks();return}
+  const t=(now-started)/1000;
+  ctx.clearRect(0,0,w,h);
+  for(const p of fireworksParticles){
+   const age=t-p.birth;if(age<0||age>p.life)continue;
+   const alpha=1-age/p.life;
+   const x=p.x+p.vx*age,y=p.y+p.vy*age+85*age*age;
+   ctx.globalAlpha=alpha;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(x,y,p.r*(.5+alpha*.5),0,Math.PI*2);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  if(t<1.8)fireworksFrame=requestAnimationFrame(frame);
+  else{ctx.clearRect(0,0,w,h);fireworksFrame=0;fireworksParticles=[]}
+ }
+ fireworksFrame=requestAnimationFrame(frame);
+}
 function startClock(){if(started)return;started=Date.now();clock=setInterval(()=>{elapsed=Math.floor((Date.now()-started)/1000);update()},400)}
 function flipFace(tile,on){tile.button.classList.toggle("open",on);tile.button.setAttribute("aria-label",on?tile.emoji:"Kapalı kart")}
 function matchVisual(a,b){for(const t of [a,b]){t.button.classList.remove("hit","bad");t.button.classList.add("matched");flipFace(t,true)}}
@@ -272,6 +339,7 @@ function tileFor(emoji,index,hidden=false){
  return cell;
 }
 function render(){
+ stopFireworks();
  clearAsync();serial++;started=0;elapsed=0;firstCard=null;tiles=[];
  const level=GAME.LEVELS[levelIndex], type=level.type;
  deck=CORE.uniquePairDeck(GAME.WORLDS[level.world].emojis,level.pairs);
@@ -336,7 +404,7 @@ function flip(tile){
        const medal=GAME.LEVELS[levelIndex].type==="budget"?(result.state.moves<=goal?"🏆 Altın hedef! ":"⭐ Bölüm tamamlandı. "):"🎉 ";
        $("result").textContent=medal+result.state.moves+" hamle · "+format(elapsed)+" süre";
        $("result").classList.remove("hidden");
-       $("result").classList.remove("win-pop");void $("result").offsetWidth;$("result").classList.add("win-pop");
+       launchFireworks();
        if(levelIndex+1===unlocked&&unlocked<GAME.COUNT){unlocked++;persist()}
        else if(levelIndex===GAME.COUNT-1){$("result").textContent+=" · Tebrikler, 100 bölüm tamamlandı!"}
      }

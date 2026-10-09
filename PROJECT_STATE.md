@@ -195,3 +195,10 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - JavaScript sözdizimi ve sahte DOM başlangıç testi geçti; ilk bölüm 4 kart, 100. bölüm 20 kart; ilerleme çubuğu son bölümde %100.
 - Mekanikler, sesler ve temel oynanış değiştirilmedi; gerçek cihazda henüz doğrulanmadı.
 - Görsel checkpoint: `f11572e0afd30855eec23331e90e22e6f50e5f14`.
+
+## Mobil bölüm bitişi — havai fişek ve ses (2026-10-09)
+- `game-mobile-v1.html`: önceki küçük başarı mesajı zıplaması yerine, oyun tahtasının üzerinde kısa (~1,8 saniye) Canvas havai fişek efekti (5 patlama/125 parçacık) eklendi. Mevcut bölüm tamamlandı bilgisi ve altın sonraki bölüm butonu kaldı.
+- Hafif kısa zafer melodisi Web Audio oscillator üzerinden üretilir; harici ses dosyası veya ağ isteği yok. Mobil autoplay kısıtlarına karşı AudioContext kart dokunuşunda hazırlanır; ses izni/tarayıcı politikası nedeniyle cihazda duyulması henüz doğrulanmadı.
+- `prefers-reduced-motion` durumunda parçacık animasyonu gösterilmez. Bölüm sıfırlama/geçişinde etkin animasyon temizlenir.
+- JS sözdizimi + sahte DOM'da 1. bölümün iki eşleşmeyle tamamlanması, havai fişek kare çiziminin planlanması ve sonraki bölüm kilidinin açılması kontrol edildi ve geçti. **Gerçek telefon ses/animasyon kabulü henüz yok.**
+- Commit'ler: `54d945c`, mobil ses hazırlama `58607ff`.

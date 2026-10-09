@@ -165,3 +165,13 @@ Durum: modül ve kontroller tamamlandı, üretim oyunu değişmedi.
 - Hedef **yalnızca** `experiments/level-flow-session-v1.html` + `src/level-core.js`; offline `www/index.html` üretimi, Capacitor Android scaffold, `assembleDebug` ve `dist/kart-eslestirme-test-debug.apk` kopyalama komutları hazır.
 - Ana oyun `index.html` ve kabul edilmiş deney değişmedi. Android proje klasörü yerelde üretilecek ve Git'e eklenmeyecek.
 - **Henüz gerçek Gradle/APK derlemesi ve telefon testi yapılmadı.** Kullanıcı yerel terminalde README yönergesini çalıştırıp sonucu bildirecek.
+
+## 100 bölümlük aile checkpoint adayı (2026-10-09)
+
+- Kullanıcı isteği: 500–1500 bölüm genişlemesini erteleyip 100 bölümlük kullanılabilir Android APK checkpoint'i oluşturmak, annesine denetmek.
+- Normal oyun desteleri her yeni başlatmada yeniden karıştırılır; aynı bölümde bir sembol yalnızca tam bir çift oluşturur. Günlük orijinal oyun farklı olarak aynı tarihe sabit seed kullanır.
+- `src/level-100.js`: 100 sıralı bölüm, 10 emoji dünyası (her 10 bölümde yeni dünya), 60 klasik + beş özel mekanikten 8'er bölüm; ilk 5 bölüm 2–6 çift öğretici, son seviyelerde maksimum 10 çift (20 kart). Sabit bölüm tanımı, rastgele kart dağıtımı.
+- `game-100.html`: ayrı oynanabilir checkpoint adayı; `src/level-core.js` ile durum yönetimi, lokal ilerleme kaydı `kart_eslestirme_100_v1`, yalnızca açılan bölümlere ilerleme, arayüzde dünyalar ve durum çubuğuna üst güvenlik payı. Onaylı deney ve eski ana oyun dosyası değişmedi.
+- Android paketleyici `scripts/prepare-android-test.mjs` artık `game-100.html` + iki modülü `www/` içine çevrimdışı kopyalıyor. Kurulu Capacitor Android klasörünü tekrar oluşturmadan `npm.cmd run android:apk` ile güncel APK üretilebilir.
+- `tests/level-100.test.cjs` eklendi, 100 bölüm × 20 karıştırma = 2000 deste kontrolü geçti. 100/100 bölüm için mock-DOM başlangıç ve kart adedi kontrolü geçti. **Gerçek 100 bölüm uçtan uca oynanış testi ve yeni APK derlemesi/telefon testi henüz yapılmadı.**
+- Özellikle ilerleme kaydı, bölüm kilidi, ilk uygulama açılışı, Android üst durum çubuğu güvenli alanı ve özel mekaniklerin gerçek cihazda çalışması için kullanıcının APK test sonucu bekleniyor.

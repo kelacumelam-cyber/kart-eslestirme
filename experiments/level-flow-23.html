@@ -74,7 +74,7 @@ function update(){
  $("pairs").textContent=found+"/"+active().pairs;
  $("moves").textContent=moves;
  $("time").textContent=format(seconds);
- $("level-label").textContent="Bölüm "+(levelIndex+1)+" / "+plan.length";
+ $("level-label").textContent="Bölüm "+(levelIndex+1)+" / "+plan.length;
  $("previous").disabled=levelIndex===0;
  $("next").textContent=levelIndex===plan.length-1?"İlk Bölüme Dön ↺":"Sonraki Bölüm →";
 }

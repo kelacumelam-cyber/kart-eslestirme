@@ -399,6 +399,7 @@ body{background:#06151c;color:var(--scene-ink);font-family:system-ui,-apple-syst
  .bottom-bar{padding-top:5px}.btn{min-height:39px}
 }
 @media(prefers-reduced-motion:reduce){.card,.icon-btn,#app{transition:none!important}}
+.header-actions{max-width:none;flex-wrap:nowrap}.header-actions .icon-btn{min-width:45px;height:44px;font-size:1.3rem}.game-menu{gap:9px;max-width:380px;text-align:center;padding:24px 20px}.game-menu .btn{width:100%;flex:none;min-height:48px}.game-menu p{margin:0 0 10px}.menu-crest{font-size:3rem;filter:drop-shadow(0 8px 16px #0005)}.setting-row{display:flex;align-items:center;justify-content:space-between;background:var(--glass);border:1px solid var(--glass-edge);border-radius:14px;padding:8px 12px;font-weight:700}.play-status{align-self:center;color:var(--scene-muted);font-size:.78rem;font-weight:700;flex:1;text-align:center}
 </style>
 </head>
 <body>
@@ -408,13 +409,7 @@ body{background:#06151c;color:var(--scene-ink);font-family:system-ui,-apple-syst
       <h1>🃏 Kart Eşleştirme</h1>
       <span class="world-pill" id="world-badge">🍎 Dünya 1</span>
     </div>
-    <div class="header-actions">
-      <button class="icon-btn" id="daily-btn" aria-label="Günlük Görev" title="Günün Meydan Okuması">📅</button>
-      <button class="icon-btn" id="theme-btn" aria-label="Temalar" title="Kart Teması">🎨</button>
-      <button class="icon-btn" id="sound-btn" aria-label="Ses" title="Ses">🔊</button>
-      <button class="icon-btn" id="haptic-btn" aria-label="Titreşim" title="Titreşim">📳</button>
-      <button class="icon-btn" id="menu-btn" aria-label="Bölümler" title="Bölümler">🗺️</button>
-    </div>
+    <div class="header-actions"><button class="icon-btn" id="menu-btn" aria-label="Duraklat" title="Menü">☰</button></div>
   </div>
 
   <!-- MOD SEÇİCİ VE JOKERLER -->
@@ -447,11 +442,17 @@ body{background:#06151c;color:var(--scene-ink);font-family:system-ui,-apple-syst
 
   <div class="bottom-bar">
     <div class="stat time-stat" id="time-stat-box" style="min-width:76px;flex:0 0 auto"><b id="tm">0:00</b><span>Süre</span></div>
-    <button class="btn alt" id="restart-btn">Yeniden Başlat</button>
-    <button class="btn" id="levels-modal-btn">Bölümler (100)</button>
+    <span class="play-status">Eşleşmeleri tamamla</span>
   </div>
 </div>
 
+<div class="overlay show" id="home-modal"><div class="dialog game-menu">
+<div class="menu-crest">🃏</div><h2>Kart Eşleştirme</h2><p>Her dünya yeni bir hafıza macerası.</p>
+<button class="btn" id="home-play-btn">▶ Oyuna Başla</button><button class="btn alt" id="levels-modal-btn">🗺 Bölümler</button><button class="btn alt" id="daily-btn">📅 Günlük Meydan Okuma</button><button class="btn alt" id="home-settings-btn">⚙ Ayarlar</button></div></div>
+<div class="overlay" id="pause-modal"><div class="dialog game-menu"><h2>Duraklatıldı</h2><p>Hazır olduğunda kaldığın yerden devam et.</p>
+<button class="btn" id="resume-btn">▶ Devam Et</button><button class="btn alt" id="restart-btn">↻ Bölümü Yeniden Başlat</button><button class="btn alt" id="pause-settings-btn">⚙ Ayarlar</button><button class="btn alt" id="pause-home-btn">⌂ Ana Menü</button></div></div>
+<div class="overlay" id="settings-modal"><div class="dialog game-menu"><h2>Ayarlar</h2><p>Oyun deneyimini kişiselleştir.</p>
+<div class="setting-row"><span>Ses efektleri</span><button class="icon-btn" id="sound-btn" aria-label="Ses">🔊</button></div><div class="setting-row"><span>Titreşim</span><button class="icon-btn" id="haptic-btn" aria-label="Titreşim">📳</button></div><button class="btn alt" id="theme-btn">🎨 Kart Temaları</button><button class="btn" id="settings-back-btn">Geri</button></div></div>
 <!-- WIN MODAL -->
 <div class="overlay" id="win-modal">
   <div class="dialog">
@@ -818,6 +819,8 @@ function startLevel(l, isDaily = false) {
   $("joker-hint").disabled = false;
 
   clearInterval(timer);
+  pausedAt=0;
+  closeMenus();
   $("time-stat-box").classList.remove("warning");
 
   if (gameMode === "timed") {
@@ -918,7 +921,7 @@ function onTimeOut() {
 }
 
 function flipCard(card) {
-  if (isLocked || card.classList.contains("matched") || card === firstCard) return;
+  if (pausedAt || document.querySelector(".overlay.show") || isLocked || card.classList.contains("matched") || card === firstCard) return;
 
   if (pendingMismatch) clearPendingMismatch();
 
@@ -1238,7 +1241,23 @@ function setGameMode(mode) {
 $("mode-relaxed").onclick = () => setGameMode("relaxed");
 $("mode-timed").onclick = () => setGameMode("timed");
 setGameMode(gameMode);
+$("home-modal").classList.add("show");
 
+let navigationOrigin="home",pausedAt=0;
+function closeMenus(){["home-modal","pause-modal","settings-modal"].forEach(id=>$(id).classList.remove("show"))}
+function pauseClock(){if(!pausedAt)pausedAt=Date.now();clearInterval(timer);timer=null}
+function resumeClock(){if(pausedAt&&started)t0+=Date.now()-pausedAt;pausedAt=0;if(started&&found<totalPairs)runTimer()}
+function showHome(){pauseClock();closeMenus();$("home-modal").classList.add("show");$("home-play-btn").textContent=started?"▶ Devam Et":"▶ Oyuna Başla"}
+function openPause(){if($("home-modal").classList.contains("show"))return;pauseClock();closeMenus();$("pause-modal").classList.add("show")}
+function openSettings(origin){navigationOrigin=origin;closeMenus();$("settings-modal").classList.add("show")}
+function returnFromSettings(){$("settings-modal").classList.remove("show");$(navigationOrigin==="pause"?"pause-modal":"home-modal").classList.add("show")}
+$("menu-btn").onclick=openPause;
+$("home-play-btn").onclick=()=>{closeMenus();resumeClock()};
+$("resume-btn").onclick=()=>{closeMenus();resumeClock()};
+$("pause-home-btn").onclick=showHome;
+$("home-settings-btn").onclick=()=>openSettings("home");
+$("pause-settings-btn").onclick=()=>openSettings("pause");
+$("settings-back-btn").onclick=returnFromSettings;
 // --- BUTON DİNLEYİCİLERİ ---
 $("sound-btn").textContent = sound.enabled ? "🔊" : "🔇";
 $("sound-btn").onclick = () => {
@@ -1288,7 +1307,7 @@ $("timeout-switch-mode").onclick = () => {
   setGameMode("relaxed");
 };
 
-$("menu-btn").onclick = $("levels-modal-btn").onclick = () => {
+$("levels-modal-btn").onclick = () => {
   currentWorldTab = Math.min(Math.floor((level - 1) / 10) + 1, 10);
   buildLevelModal();
   $("level-modal").classList.add("show");

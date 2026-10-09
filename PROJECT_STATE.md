@@ -92,3 +92,13 @@ Kullanıcı, laboratuvar prototiplerinde orijinal oyundaki animasyonların eksik
 - Gerçek animasyon sürümü ayrı, geri alınabilir commit ve telefon testiyle değerlendirilecek.
 
 Durum: yalnız hedef kaydı, oyun kodu değiştirilmedi.
+
+## 18 bölümlük birleşik pilot (2026-10-09)
+- `experiments/level-flow-18.html`: ana oyundan bağımsız, 18 bölümlük kontrollü akış.
+- Altı bölüm karakteri: klasik, ön izleme, şekilli tahta, hamle ustalığı, buz, dalga. Klasik temel; diğerleri aralarda.
+- Kart açma, doğru/yanlış, buz çözülmesi ve kartların girişine CSS animasyonları eklendi; reduced-motion dikkate alındı.
+- Her bölümün kart havuzu tekil sembollerden iki kopya üretir; algoritmik doğrulama var.
+- Geçişlerde eski zamanlayıcılar temizlenir; token kontrolleri vardır.
+- Kullanıcıya web denemesi teslim edildi. **Tarayıcıda/gerçek Android'de fiili kabul ve kare hızı henüz doğrulanmadı.**
+- Ana oyun `index.html` değiştirilmedi; eski laboratuvar sayfaları korundu.
+- Bir sonraki karar: kullanıcının oynanış ve animasyon hissiyatı geri bildirimine göre düzeltme, sonra ana oyuna kademeli geçiş.

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#111d36"><title>Kart Eşleştirme | Bölüm Laboratuvarı</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#f7f8ff;background:#0b1429}button{font:inherit;cursor:pointer;touch-action:manipulation}#app{min-height:100dvh;max-width:520px;margin:auto;background:radial-gradient(ellipse at 45% 5%,#344981 0,transparent 55%),linear-gradient(#12233c,#0a1223);padding:max(env(safe-area-inset-top),18px) 16px max(env(safe-area-inset-bottom),24px);display:flex;flex-direction:column;gap:14px}.top{display:flex;align-items:center;justify-content:space-between}.eyebrow{font-size:.75rem;text-transform:uppercase;letter-spacing:.14em;color:#a6b9de;font-weight:800}h1{font-size:1.45rem;line-height:1.2;margin:4px 0 0}.sub{color:#b8c8e8;font-size:.89rem;line-height:1.45;margin:0}.pill{border-radius:99px;background:#ffffff17;border:1px solid #ffffff29;padding:8px 12px;font-size:.72rem;color:#d7e3fb;white-space:nowrap}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.tab{border:1px solid #ffffff30;background:#ffffff0d;color:#b9c9e5;border-radius:13px;padding:11px 4px;font-size:.78rem;font-weight:800;min-height:51px}.tab.active{background:#ffcc72;color:#22263f;border-color:#ffe3a5}.panel{border:1px solid #ffffff24;border-radius:21px;background:#ffffff0b;padding:14px;box-shadow:0 8px 30px #0002}.name{font-size:1.1rem;font-weight:900;margin-bottom:5px}.desc{color:#c0cbe2;font-size:.82rem;line-height:1.5;min-height:42px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.stat{background:#080f2366;padding:9px 5px;border-radius:12px;text-align:center}.stat b{display:block;font-variant-numeric:tabular-nums;font-size:1.15rem}.stat span{display:block;font-size:.65rem;color:#a9b8d6;margin-top:2px}.board-wrap{position:relative;flex:1;min-height:320px;background:radial-gradient(circle,#35507a55,transparent 65%),#070f1d88;border:1px solid #ffffff1e;border-radius:22px;display:flex;align-items:center;justify-content:center;padding:12px}.board{display:grid;grid-template-columns:repeat(var(--columns),minmax(0,1fr));gap:8px;width:100%;max-width:380px}.cell{aspect-ratio:1;min-width:0}.card{display:block;width:100%;height:100%;position:relative;border:0;border-radius:13px;background:linear-gradient(145deg,#5c9da2,#25616c);box-shadow:inset 0 2px #ffffff83,0 5px 0 #0a3746,0 8px 12px #0004;color:#c2e6d9;font-size:clamp(23px,7vw,42px);font-weight:800;transition:transform .18s,background .18s}.card::after{content:"◆";position:absolute;inset:0;display:grid;place-items:center;color:#d5ef9c;text-shadow:0 0 15px #d9ff7a;pointer-events:none}.card.open,.card.matched{background:linear-gradient(145deg,#fffaf0,#cbd7f1);box-shadow:0 3px 0 #7894ba,0 5px 12px #0004;transform:translateY(2px);color:#172943}.card.open::after,.card.matched::after{content:none}.card.matched{opacity:.42;pointer-events:none}.hole{width:100%;height:100%;border-radius:11px;border:1px dashed #90abd055;background:#0715258a}.preview{position:absolute;z-index:5;top:12px;left:12px;right:12px;text-align:center;padding:8px;background:#f7ce76;color:#22263a;font-weight:900;border-radius:11px;box-shadow:0 4px 20px #0005}.hidden{display:none!important}.actions{display:flex;gap:9px}.primary,.secondary{border:0;border-radius:14px;min-height:50px;padding:12px 18px;font-weight:900}.primary{background:linear-gradient(#ffdf92,#ffbc52);color:#263047;flex:1;box-shadow:0 4px 0 #815c28}.secondary{background:#ffffff1b;color:#f9fbff;border:1px solid #ffffff2a}.result{border-radius:15px;background:#3bd3a921;border:1px solid #70e8b060;padding:12px;color:#d1ffec;font-weight:750;font-size:.88rem}footer{color:#9aaed2;font-size:.72rem;line-height:1.4;text-align:center}@media(max-height:720px){#app{gap:9px;padding-top:9px}.board-wrap{min-height:270px}.panel{padding:10px}.stats{margin-top:7px}.desc{min-height:0}.board{max-width:335px;gap:6px}}@media(max-width:350px){#app{padding-left:9px;padding-right:9px}.tab{font-size:.7rem;padding:8px 2px}.board{gap:6px}.card{border-radius:10px}}
+</style></head><body><main id="app">
+<div class="top"><div><div class="eyebrow">Oynanış deneyi · V1</div><h1>Bölüm Laboratuvarı</h1></div><span class="pill">Ana oyundan bağımsız</span></div>
+<p class="sub">Üç farklı bölüm karakterini sırayla oyna. Kart sayısı sabit: değişen şey deneyimin kendisi.</p>
+<div class="tabs" role="group" aria-label="Deney türü"><button class="tab active" data-mode="classic">1 · Klasik</button><button class="tab" data-mode="preview">2 · Ön İzleme</button><button class="tab" data-mode="shape">3 · Şekilli Tahta</button></div>
+<section class="panel"><div class="name" id="mode-name"></div><div class="desc" id="mode-desc"></div><div class="stats"><div class="stat"><b id="pairs">0/6</b><span>Çift</span></div><div class="stat"><b id="moves">0</b><span>Hamle</span></div><div class="stat"><b id="time">0:00</b><span>Süre</span></div></div></section>
+<div class="board-wrap"><div class="preview hidden" id="preview-text" aria-live="polite"></div><div class="board" id="board" aria-label="Eşleştirme kartları"></div></div>
+<div id="result" class="result hidden" role="status"></div><div class="actions"><button class="secondary" id="restart">↻ Tekrar</button><button class="primary" id="next">Sonraki Deney →</button></div>
+<footer>Her sembol bu destede tam iki kez bulunur. Kaydedilmiş bölüm ilerlemen değişmez.</footer>
+</main>
+<script>
+"use strict";
+const $=id=>document.getElementById(id);
+const modes=[
+ {id:"classic",name:"Klasik Eşleştirme",desc:"12 kart, 6 farklı çift. Kartları çevirerek eşleşmeleri bul. Karşılaştırma için temel deney.",cols:3,cells:Array.from({length:12},(_,i)=>i)},
+ {id:"preview",name:"Hızlı Ön İzleme",desc:"Bütün kartlar 3 saniye açık görünür. Yerlerini hatırla; kapandıklarında eşleştir.",cols:3,cells:Array.from({length:12},(_,i)=>i)},
+ {id:"shape",name:"Şekilli Tahta",desc:"12 kart aynı, ama bu kez dört boşlukla bölünmüş bir harita var. Mekânsal his değişiyor mu?",cols:4,cells:[0,1,2,3,4,7,8,11,12,13,14,15]}
+];
+const symbols=["🍎","🍋","🥑","🍇","🍓","🍉","🍒","🍌","🥝","🍍"];
+let modeIndex=0,gameToken=0,cards=[],first=null,locked=false,matched=0,moves=0,startAt=0,elapsed=0,ticker=null,previewTimer=null,mismatchTimer=null;
+function shuffle(a){const b=a.slice();for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]]}return b}
+function format(sec){return Math.floor(sec/60)+":"+String(sec%60).padStart(2,"0")}
+function stop(){clearInterval(ticker);clearTimeout(previewTimer);clearTimeout(mismatchTimer);ticker=null;previewTimer=null;mismatchTimer=null}
+function update(){ $("pairs").textContent=matched+"/6";$("moves").textContent=moves;$("time").textContent=format(elapsed)}
+function startClock(){if(startAt||locked&&modes[modeIndex].id==="preview")return;startAt=Date.now();ticker=setInterval(()=>{elapsed=Math.floor((Date.now()-startAt)/1000);update()},300)}
+function render(){
+ stop();gameToken++;let token=gameToken;first=null;locked=false;matched=0;moves=0;startAt=0;elapsed=0;cards=[];
+ const m=modes[modeIndex];$("mode-name").textContent=m.name;$("mode-desc").textContent=m.desc;$("board").style.setProperty("--columns",m.cols);
+ $("preview-text").classList.add("hidden");$("result").classList.add("hidden");
+ document.querySelectorAll(".tab").forEach((b,i)=>{b.classList.toggle("active",i===modeIndex);b.setAttribute("aria-pressed",String(i===modeIndex))});
+ const selected=shuffle([...new Set(symbols)]).slice(0,6);if(new Set(selected).size!==6)throw Error("Benzersiz sembol yetersiz");
+ const deck=shuffle([...selected,...selected]);const board=$("board");board.replaceChildren();let nextCard=0;
+ for(let i=0;i<m.cols*4;i++){const cell=document.createElement("div");cell.className="cell";if(!m.cells.includes(i)){cell.innerHTML='<div class="hole" aria-hidden="true"></div>';board.append(cell);continue}
+ const emoji=deck[nextCard++];const btn=document.createElement("button");btn.type="button";btn.className="card";btn.setAttribute("aria-label","Kapalı kart");cell.append(btn);board.append(cell);
+ const card={emoji,btn,matched:false};cards.push(card);btn.onclick=()=>flip(card,token);
+ }
+ const counts={};cards.forEach(c=>counts[c.emoji]=(counts[c.emoji]||0)+1);if(cards.length!==12||Object.values(counts).some(v=>v!==2))throw Error("Deste doğrulaması başarısız");
+ update();
+ if(m.id==="preview"){locked=true;cards.forEach(c=>show(c));$("preview-text").classList.remove("hidden");$("preview-text").textContent="Kartları hatırla · 3";let remaining=3;const step=()=>{if(token!==gameToken)return;remaining--;if(remaining>0){$("preview-text").textContent="Kartları hatırla · "+remaining;previewTimer=setTimeout(step,1000)}else{cards.forEach(hide);$("preview-text").classList.add("hidden");locked=false}};previewTimer=setTimeout(step,1000)}
+}
+function show(c){c.btn.classList.add("open");c.btn.textContent=c.emoji;c.btn.setAttribute("aria-label",c.emoji)}
+function hide(c){if(c.matched)return;c.btn.classList.remove("open");c.btn.textContent="";c.btn.setAttribute("aria-label","Kapalı kart")}
+function flip(c,token){if(token!==gameToken||locked||c.matched||c===first||c.btn.classList.contains("open"))return;startClock();show(c);if(!first){first=c;return}moves++;const a=first;first=null;locked=true;
+ if(a.emoji===c.emoji){a.matched=c.matched=true;a.btn.classList.add("matched");c.btn.classList.add("matched");matched++;locked=false;if(matched===6){stop();elapsed=startAt?Math.floor((Date.now()-startAt)/1000):0;$("result").textContent="Tamamlandı! "+moves+" hamlede ve "+format(elapsed)+" sürede bitirdin. Diğer düzenle karşılaştır."; $("result").classList.remove("hidden")}}
+ else mismatchTimer=setTimeout(()=>{if(token!==gameToken)return;hide(a);hide(c);locked=false},770);update()}
+document.querySelectorAll(".tab").forEach((b,i)=>b.onclick=()=>{modeIndex=i;render()});
+$("restart").onclick=render;
+$("next").onclick=()=>{modeIndex=(modeIndex+1)%modes.length;render()};
+render();
+</script></body></html>
